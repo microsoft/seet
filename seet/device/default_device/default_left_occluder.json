@@ -1,0 +1,31 @@
+{
+  "_comment": "Coordinates in occluder coordinate system in mm units. Value of key 'requires grad' indicates whether coordinates are assumed to be differentiable. Occluders can be of two types: 'windows' or 'blockers'. Type 'window' means that occlusion happens on the exterior of the boundary. Type 'blocker' means that occlusion happens on the interior of the boundary.",
+
+  "name": "default left occluder.",
+
+  "requires grad": false,
+
+  "type": "window",
+
+  "coordinates": [
+    [15.6092, 8.93523, 11.9395],
+    [22.184, 11.6267, 11.8362],
+    [28.463, 12.8506, 11.0323],
+    [37.1436, 13.4351, 9.48021],
+    [43.115, 13.273, 8.12457],
+    [49.6375, 9.95743, 6.13936],
+    [50.8388, 7.25612, 5.56756],
+    [51.9251, 2.63139, 4.80075],
+    [52.5058, -1.50216, 4.14759],
+    [52.4776, -7.73132, 3.28294],
+    [50.6491, -11.9963, 3.13073],
+    [46.0506, -14.2837, 4.01801],
+    [41.0258, -15.9428, 4.9702],
+    [34.5825, -17.2994, 6.10556],
+    [28.3139, -17.9195, 7.10717],
+    [22.0969, -16.2812, 8.11699],
+    [17.385, -9.52979, 10.0521],
+    [14.4654, -3.93268, 11.1122],
+    [12.6172, 0.709204, 11.8073]
+  ]
+}

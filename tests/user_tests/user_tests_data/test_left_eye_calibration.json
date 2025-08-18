@@ -1,0 +1,74 @@
+{
+  "Attributes": {
+    "ModelStatus": 2,
+    "PercentageValidGazeEstimationsFromCalibrationData": 1,
+    "PercentageValidRmsEstimationsFromCalibrationData": 1,
+    "VisualCorrectionMedium": 0
+  },
+  "CalibrationSessionParameters": {
+    "GlintRmsAtAvtCheckFrameThreshold": 0.20482608675957,
+    "NumMatchedGlintsAtAvtCheckFrameThreshold": 8,
+    "PupilRmsAtAvtCheckFrameThreshold": 0.095601186156273,
+    "medianPupilRadiusFromCalibration": 2.5755887031555,
+    "robustStdDevPupilRadiusFromCalibration": 0.16745166480541
+  },
+  "CorrectionMapParameters": {
+    "MatrixParams": [
+      0.98516446352005, 0.022398430854082, -0.0015223419759423,
+      -0.0095180254429579, 1.008080124855, -0.0026044941041619,
+      0.0031959998887032, 0.027255402877927, 1
+    ],
+    "ModelType": 2
+  },
+  "EyeModel": {
+    "corneaCenterToPupilPlaneDistance": 7.0296125411987,
+    "corneaModel": {
+      "corneaQuadricShape": {
+        "v": [
+          0.012511594220996, 0, 0, 0, 0.012590684928, 0, 0, 0,
+          0.009535233490169
+        ]
+      },
+      "normalPerturbationWeights": [
+        -0.0030416015069932, -0.0019729561172426, -0.003250224981457,
+        0.00099535589106381, 0.0066191283985972, 0.031811945140362
+      ]
+    },
+    "debug": {
+      "anteriorChamberDepth": 2.6621980667114,
+      "apicalCorneaAstigmatismRatio": 1.006321310997,
+      "apicalCorneaRadius": 7.7801294326782,
+      "corneaApexToLimbusPlaneDistance": 2.6375269889832,
+      "corneaApexToRotationCenterDistance": 13.685601234436
+    },
+    "indexOfRefraction": 1.37600004673,
+    "isEyeModelValid": true,
+    "limbusCenterInQuadricFrame": { "v": [0, 0, 7.603283405304] },
+    "limbusPlaneNormalInQuadricFrame": { "v": [0, 0, 1] },
+    "limbusRadius": 5.936420917511,
+    "pupilCenterAdjustmentLine": {
+      "Intercept": { "v": [0.27103433012962, -0.12323828041553] },
+      "Slope": { "v": [-0.077205032110214, 0.07664979249239] }
+    },
+    "pupilPlaneMaxElevationAdjustment": 1.2999999523163,
+    "rotationCenterInETCameraFrame": {
+      "v": [-2.7240104675293, -2.4779560565948, 45.812446594238]
+    },
+    "rotationCenterToCorneaCenterDistance": 3.4447908401489,
+    "rotationSurfaceVerticalScale": 0.91870993375778
+  },
+  "KappaAxisInEye": {
+    "v": [0.10573208332062, -0.039271019399166, 0.99361890554428]
+  },
+  "NumSessions": 0,
+  "QualityMetricsPerSession": null,
+  "RegressionModels": { "ModelCount": 0 },
+  "RotationCam2Eye": {
+    "v": [
+      -0.80219119787216, -0.4285700917244, -0.41571265459061,
+      -0.42944172024727, 0.89787441492081, -0.096960633993149,
+      0.41481217741966, 0.10074339061975, -0.9043128490448
+    ]
+  },
+  "Version": 7
+}

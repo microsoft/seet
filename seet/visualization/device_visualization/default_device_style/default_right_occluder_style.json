@@ -1,0 +1,11 @@
+{
+  "_comments": "If visualize node is true, visualization will contain a glyph at the origin of the occluder's coordinate system.",
+
+  "show origin": false,
+
+  "point set": {
+    "c": [0.2, 1.0, 0.2],
+
+    "marker": "o"
+  }
+}

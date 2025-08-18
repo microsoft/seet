@@ -1,0 +1,11 @@
+{
+  "_comments": "If visualize node is true, visualization will contain a glyph at the origin of the LEDs' coordinate system.",
+
+  "show origin": false,
+  
+  "point set": {
+    "c": [0.5, 1.0, 0.5],
+
+    "marker": "o"
+  }
+}

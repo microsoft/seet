@@ -1,0 +1,15 @@
+{
+  "_comment": [
+    "Path is the directory where the common inputs are found. If null, the Kiruna default is used.",
+    "'gaze inputs' is either a list [M, N] where M and N are a number of uniformly spaced horizontal and vertical gaze directions, or a list of (2,) lists where each element in the inner list is a gaze direction expressed as a horizontal and vertical angles in degrees.",
+    "Either way, 'gaze inputs' is used to sample the eye-tracking field of view of the device's display to generate input data for the computation of eye-shape covariances.",
+    "'with limbus' indicates whether or not limbus features are used in the computation of eye-shape covariances."
+  ],
+
+  "name": "default inputs for computation of eye-shape covariance",
+
+  "path": null,
+  "common inputs": "default_covariances/default_common_inputs.json",
+  "gaze inputs": [3, 3],
+  "with limbus": true
+}

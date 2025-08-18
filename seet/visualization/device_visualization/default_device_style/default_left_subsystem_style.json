@@ -1,0 +1,16 @@
+{
+  "_comments": [
+    "If visualize node is true, visualization will contain a glyph at the origin of the subsystem's coordinate system.",
+    "Path is where the default style files are found. If null, the Kiruna default is used."
+  ],
+
+  "show origin": false,
+
+  "path": null,
+
+  "cameras": ["default_device_style/default_left_camera_style.json"],
+
+  "leds": "default_device_style/default_left_leds_style.json",
+
+  "occluder": "default_device_style/default_left_occluder_style.json"
+}

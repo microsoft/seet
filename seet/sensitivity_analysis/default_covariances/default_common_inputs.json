@@ -1,0 +1,21 @@
+{
+  "_comment": [
+    "This file does not contain covariance parameters.",
+    "Instead, it specifies configuration files for the definition of the covariances of the inputs to the computation of eye-parameter covariances.",
+    "In addition, it specifies the gaze directions for which we wish to collect image features for the computation of the covariance of eye parameters, and whether we wish to include limbus features in the computation.",
+    "Path is the directory where the covariance files are found. If null, the Kiruna default is used.",
+    "'gaze inputs' is either a list [M, N] where M and N are a number of uniformly spaced horizontal and vertical gaze directions, or a list of (2,) lists where each element in the inner list is a gaze direction expressed as a horizontal and vertical angles in degrees.",
+    "Either way, 'gaze inputs' is used to sample the eye-tracking field of view of the device's display to generate input data for the computation of eye-parameter covariances.",
+    "'with limbus' indicates whether or not limbus features are used in the computation of eye-parameter covariances."
+  ],
+
+  "name": "default input covariances for eye shape and pose",
+
+  "path": null,
+
+  "leds": "default_covariances/default_led_covariances.json",
+
+  "camera": "default_covariances/default_camera_covariances.json",
+
+  "features": "default_covariances/default_feature_covariances.json"
+}

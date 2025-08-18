@@ -1,0 +1,40 @@
+{
+  "_comment": [
+    "Extrinsics place the user and device in the coordinate system of the scene.",
+    "Value of top-level 'requires grad' key indicates whether user and device extrinsics are assumed to be differentiable."
+  ],
+
+  "name": "default scene",
+
+  "requires grad": false,
+
+  "user": {
+    "extrinsics": [
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, 1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ],
+
+    "requires grad": false,
+
+    "_comment": "Path is the directory where the camera file is found. If null, the Kiruna default is used.",
+    "path": null,
+    "parameter file": "default_user/default_user.json"
+  },
+
+  "device": {
+    "extrinsics": [
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, 1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ],
+
+    "requires grad": false,
+
+    "_comment": "Path is the directory where the device file is found. If null, the Kiruna default is used.",
+    "path": null,
+    "parameter file": "default_device/default_device_model.json"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "_comments": [
+    "Length units of camera extrinsics are mm.",
+    "Extrinsics are TO camera FROM ET subsystem, unless indicated as 'inverse' in json element 'extrinsics type'.",
+    "Key 'eye indices' holds values of indices of eyes visible by the camera."
+  ],
+
+  "name": "default left ET subsystem",
+
+  "eye indices": [0],
+
+  "cameras": [
+    {
+      "_comments": [
+        "Key 'requires grad' indicates whether camera extrinsics are to be assume differentiable.",
+        "If value for key 'extrinsics type' is 'inverse', extrinsics are TO ET subsystem FROM camera.",
+        "Path is the directory where the intrinsics file is found. If null, the Kiruna default is used."
+      ],
+
+      "requires grad": false,
+
+      "extrinsics": [
+        [1.0, 7.5557e-8, 4.3975e-8, -3.0e1],
+        [8.7423e-8, -8.6427e-1, -5.0302e-1, 4.8619e-1],
+        [0.0, 5.0302e-1, -8.6427e-1, 4.0475e1],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+
+      "extrinsics type": "As long as this is not 'inverse' it won't matter.",
+
+      "path": null,
+      "intrinsics": "default_device/default_left_camera.json"
+    }
+  ],
+
+  "LEDs": {
+    "_comments": [
+      "The value for key 'requires_grad' indicates whether extrinsic parameters are supposed to be differentiable.",
+      "Path is the directory where the intrinsics file is found. If null, the Kiruna default is used."
+    ],
+
+    "requires grad": false,
+
+    "extrinsics": [
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, 1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ],
+
+    "path": null,
+    "coordinates": "default_device/default_left_leds.json"
+  },
+
+  "occluder": {
+    "_comments": [
+      "The value for key 'requires_grad' indicates whether extrinsic parameters are supposed to be differentiable.",
+      "Path is the directory where the extrinsic parameters file is found. If null, the Kiruna default is used."
+    ],
+
+    "requires grad": false,
+
+    "extrinsics": [
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, 1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ],
+
+    "path": null,
+    "coordinates": "default_device/default_left_occluder.json"
+  }
+}

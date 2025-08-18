@@ -1,0 +1,40 @@
+{
+  "_comment": [
+    "In addition to visualization style for the user and device, this also sets style parameters for elements that depend on both: glints, *refracted* pupil, and occluding contour.",
+    "Path is where the default style files are found. If null, the Kiruna default is used."
+  ],
+
+  "path": null,
+
+  "user": "default_user_style/default_user_model_style.json",
+
+  "device": "default_device_style/default_device_model_style.json",
+
+  "apply device occluder": true,
+
+  "apply eyelid occlusion": true,
+
+  "glints": {
+    "s": 5,
+
+    "c": "r",
+
+    "marker": "o"
+  },
+
+  "refracted pupil": {
+    "c": "orange",
+
+    "linestyle": "-",
+
+    "linewidth": 2.0
+  },
+
+  "occluding contour": {
+    "c": "m",
+
+    "linestyle": "-",
+
+    "linewidth": 3.0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_comment": [
+    "Path is the directory where the common inputs are found. If null, the Kiruna default is used.",
+    "'with limbus' indicates whether or not limbus features are used in the computation of eye-pose covariances.",
+    "The computation of eye-pose covariances requires the eye-shape covariances."
+  ],
+
+  "name": "default inputs for computation of eye-pose covariance",
+
+  "path": null,
+  "common inputs": "default_covariances/default_common_inputs.json",
+  "eye-shape covariance": "default_covariances/default_eye_shape_covariances.json",
+  "with limbus": false
+}

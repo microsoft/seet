@@ -1,0 +1,20 @@
+name: SEET_env
+channels:
+  - conda-forge
+  - nvidia
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - ipykernel
+    - ipympl
+    - ipywidgets
+    - matplotlib
+    - numpy
+    - pandas
+    - parameterized
+    - PySimpleGUI
+    - scipy
+  - pip:
+    - -r requirements.txt
+

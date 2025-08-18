@@ -1,0 +1,51 @@
+{
+  "glints": {
+    "s": 5,
+
+    "c": "r",
+
+    "marker": "o"
+  },
+
+  "pupil": {
+    "c": "r",
+
+    "linestyle": "-",
+
+    "linewidth": 2.0
+  },
+
+  "refracted pupil": {
+      "c": "orange",
+
+    "linestyle": "-",
+
+    "linewidth": 2.0
+  },
+
+  "occluding contour": {
+    "c": "m",
+
+    "linestyle": "-",
+
+    "linewidth": 2.0
+  },
+
+  "eyelids": {
+      "c": "b",
+
+      "linestyle": "-",
+
+      "linewidth": 2.0
+  },
+
+  "occluder": {
+    "_comments": "'c' below is for color, which we set as an rgb value.",
+
+    "c": [1.0, 0.2, 0.2],
+
+    "linestyle": "--",
+
+    "linewidth": 2.0
+  }
+}

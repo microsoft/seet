@@ -1,0 +1,19 @@
+{
+  "_comments": "If visualize node is true, visualization will contain a glyph at the origin of the camera's coordinate system.",
+
+  "show origin": false,
+
+  "scale mm": 4.0,
+
+  "wireframe": {
+    "c": "r",
+
+    "linestyle": "-"
+  },
+
+  "optical center": {
+    "c": "r",
+
+    "marker": "o"
+  }
+}

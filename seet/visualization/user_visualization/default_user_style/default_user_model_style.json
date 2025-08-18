@@ -1,0 +1,27 @@
+{
+  "_comment": "Path is where the default style files are found. If null, the Kiruna default is used.",
+
+  "path": null,
+
+  "eyes": [
+    {
+      "rotation center": {
+        "c": "r",
+
+        "marker": "o"
+      },
+
+      "eye": "default_user_style/default_left_eye_model_style.json"
+    },
+
+    {
+      "rotation center": {
+        "c": "g",
+
+        "marker": "o"
+      },
+
+      "eye": "default_user_style/default_right_eye_model_style.json"
+    }
+  ]
+}

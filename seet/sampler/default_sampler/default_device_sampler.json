@@ -1,0 +1,84 @@
+{
+  "_comment": [
+    "Lengths are in mm, angles are in degrees.",
+    "This file has parameters for the sampling of the location of the occluders.",
+    "The occluders move as a rigid body, therefore their motion is not sampled independently for each subsystem.",
+    "If the parameter 'seed' is not 'null', then the seed of the internal random sampler will be set to that value"
+  ],
+
+  "name": "default device sampler",
+
+  "seed": 0,
+
+  "occluder rotational perturbation": {
+    "apply": true,
+
+    "_comment": [
+      "If 'apply' is false the other parameters are ignored and the orientation of the occluder is not perturbed.",
+      "The rotation is provided as an axis-angle in the coordinate system of the device.",
+      "The first coordinate is rotation around x (pantoscopic tilt); the second coordinate is rotation around y (yaw, or rotation around vertical); the third coordinate is rotation around z (roll, or how askew the occluders are)."
+    ],
+
+    "x": {
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 1.0,
+      "min": -3.0,
+      "max": 3.0
+    },
+
+    "y": {
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 1.0,
+      "min": -3.0,
+      "max": 3.0
+    },
+
+    "z": {
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 1.0,
+      "min": -3.0,
+      "max": 3.0
+    }
+  },
+
+  "occluder translational perturbation": {
+    "apply": true,
+
+    "_comment": [
+      "If 'apply' is false the other parameters are ignored and the orientation of the occluder is not perturbed.",
+      "The translation is in the coordinate system of the device."
+    ],
+
+    "x": {
+      "_comment": [
+        "This is double the horizontal fit distribution from https://mixedrealitywiki.com/x/dDO7Bg",
+        "May have to be updated."
+      ],
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 0.4,
+      "min": -1.2,
+      "max": 1.2
+    },
+
+    "y": {
+      "_comment": "This is double the horizontal fit distribution from https://mixedrealitywiki.com/x/dDO7Bg",
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 1.8,
+      "min": -5.4,
+      "max": 5.4
+    },
+
+    "z": {
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 2.0,
+      "min": -6.0,
+      "max": 6.0
+    }
+  }
+}

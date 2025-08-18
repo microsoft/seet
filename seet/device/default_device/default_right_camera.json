@@ -1,0 +1,27 @@
+{
+  "_comment": "Value of key 'requires grad' indicates whether intrinsic parameters are assumed differentiable.",
+
+  "name": "default left camera",
+
+  "pinhole parameters": {
+    "_comment": "Pinhole parameters in pixels.",
+
+    "requires grad": false,
+
+    "focal lengths": [200.0, 200.0],
+
+    "principal point": [199.5, 199.5],
+
+    "resolution": [400.0, 400.0]
+  },
+
+  "distortion parameters": {
+    "_comment": "Distortion parameters in normalized image coordinates.",
+
+    "requires grad": false,
+
+    "distortion center": [0.0, 0.0],
+
+    "distortion coefficients": [0.0, 0.0, 0.0]
+  }
+}

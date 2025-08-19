@@ -1,0 +1,55 @@
+{
+  "num level sets": 7,
+
+  "num points per ellipse": 30,
+
+  "cornea": {
+    "linestyle": ":",
+
+    "c": "c",
+
+    "alpha": 0.5,
+
+    "label": "cornea"
+  },
+
+  "cornea apex": {
+    "marker": "o",
+
+    "c": "c",
+
+    "alpha": 0.5
+  },
+
+  "upper eyelid": {
+    "linestyle": "-",
+
+    "c": "b",
+
+    "label": "upper eyelid"
+  },
+
+  "lower eyelid": {
+    "linestyle": "-",
+
+    "c": "b",
+
+    "label": "lower eyelid"
+  },
+
+  "pupil": {
+    "linestyle": "-",
+
+    "c": [0.65, 0.48, 0.37],
+
+    "label": "pupil"
+  },
+
+  "limbus": {
+    "linestyle": "-",
+
+    "c": [0.65, 0.48, 0.37],
+
+    "label": "limbus"
+  }
+}

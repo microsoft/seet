@@ -1,0 +1,36 @@
+Metadata-Version: 2.4
+Name: seet
+Version: 1.0.0
+Summary: SEET (Simulation Environment for Eye Tracking)
+Author-email: "Paulo R. S. Mendonca" <padossa@microsoft.com>
+License: MIT
+Project-URL: Homepage, https://github.com/microsoft/seet
+Project-URL: Repository, https://github.com/microsoft/seet
+Project-URL: Documentation, https://github.com/microsoft/seet
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Computer Vision
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: ipykernel
+Requires-Dist: ipympl
+Requires-Dist: ipywidgets
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: parameterized
+Requires-Dist: PySimpleGUI
+Requires-Dist: scipy
+Requires-Dist: torch
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+
+# Repository setup required :wave:
+    
+Please visit the website URL :point_right: for this repository to complete the setup of this repository and configure access controls.

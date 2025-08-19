@@ -1,0 +1,15 @@
+{
+  "_comments": [
+    "If visualize node is true, visualization will contain a glyph at the origin of the device's coordinate system.",
+    "Path is where the subsystem files are found. If null, the Kiruna default is used."
+  ],
+
+  "show origin": false,
+
+  "path": null,
+  "et subsystems": [
+    "default_device_style/default_left_subsystem_style.json",
+
+    "default_device_style/default_right_subsystem_style.json"
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "_comment": [
+    "User and device have their own sampling parameters.",
+    "To sample the relative pose of the user and the device, we keep the user fixed and move the device. This is consistent with the donning and doffing of a device.",
+    "If the parameter 'seed' is not 'null', then the seed of the internal random sampler will be set to that value"
+  ],
+
+  "num samples": 1,
+
+  "seed": 0,
+
+  "scene parameters": {
+    "_comment": [
+      "Path is the directory where the scene parameters are found.",
+      "If null, the Kiruna default is used."
+    ],
+    "path": null,
+    "parameter file": "default_scene/default_scene.json"
+  },
+
+  "user sampling parameters": {
+    "_comment": [
+      "Path is the directory where the user sampling file is found.",
+      "If null, the Kiruna default is used."
+    ],
+    "apply": true,
+    "path": null,
+    "parameter file": "default_sampler/default_user_sampler.json"
+  },
+
+  "device sampling parameters": {
+    "_comment": [
+      "This is for perturbations internal to the device, such as those in the device's occluder, if one is present.",
+      "In the future, camera and LED perturbations will be dealt with here as well."
+    ],
+    "apply": true,
+    "path": null,
+    "parameter file": "default_sampler/default_device_sampler.json"
+  },
+
+  "device fit perturbation parameters": {
+    "_comment": [
+      "Here we have perturbations for the device as a single object."
+    ],
+
+    "device rotational perturbation": {
+      "apply": true,
+
+      "x": {
+        "_comment": "This is the pantoscopic tilt.",
+        "distribution type": "truncated normal",
+        "loc": 0.0,
+        "scale": 1.0,
+        "min": -1.0,
+        "max": 1.0
+      },
+
+      "y": {
+        "distribution type": "truncated normal",
+        "loc": 0.0,
+        "scale": 1.0,
+        "min": -1.0,
+        "max": 1.0
+      },
+
+      "z": {
+        "distribution type": "truncated normal",
+        "loc": 0.0,
+        "scale": 1.0,
+        "min": -1.0,
+        "max": 1.0
+      }
+    },
+
+    "device translational perturbation": {
+      "apply": true,
+
+      "x": {
+        "distribution type": "truncated normal",
+        "loc": 0.0,
+        "scale": 0.2,
+        "min": -0.6,
+        "max": 0.6
+      },
+
+      "y": {
+        "distribution type": "truncated normal",
+        "loc": 0.0,
+        "scale": 0.9,
+        "min": -2.7,
+        "max": 2.7
+      },
+
+      "z": {
+        "_comment": [
+          "This parameter is responsible for changes in eye relief. ",
+          "Mid cornea has the default eye relief, and the far cornea apex has +7 eye relief",
+          "Near cornea apex with UPLC has -4 relief, and near cornea apex without UPLC has -8 eye relief"
+        ],
+        "distribution type": "truncated normal",
+        "loc": 0.0,
+        "scale": 3.5,
+        "min": -7.0,
+        "max": 7.0
+      }
+    }
+  }
+}

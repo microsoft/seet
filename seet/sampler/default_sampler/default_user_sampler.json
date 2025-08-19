@@ -1,0 +1,102 @@
+{
+  "_comment": [
+    "This file has parameters for the sampling of user (not eye) parameters: IPD, eye relief, vertical disparity, and nominal gaze.",
+    "If the parameter 'seed' is not 'null', then the seed of the internal random sampler will be set to that value",
+    "Path is the directory where the eye sampler is found. If null the Kiruna default is used.",
+    "Intrinsics is the file with the sampling parameters of the eye. If null, no sampling of the eye-shape parameters is performed.",
+    "Perturbations affect both eyes.",
+    "Lengths are in mm, angles are in degrees."
+  ],
+
+  "name": "default user sampler",
+
+  "seed": 0,
+  "path": null,
+  "intrinsics": null,
+
+  "nominal gaze angle perturbation": {
+    "apply": true,
+
+    "_comment": [
+      "If 'apply' is false the other parameters are ignored and gaze perturbation is not applied.",
+      "This follows the structure of default_user.json.",
+      "The same vertical and horizontal rotations are applied to both eyes.",
+      "Different vertical and horizontal rotation disparities are applied to each eye independently."
+    ],
+
+    "vertical rotation": {
+      "_comment": "If apply is false, no perturbation is applied.",
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 2.0,
+      "min": -2.0,
+      "max": 2.0
+    },
+
+    "vertical rotation disparity": {
+      "_comment": "If apply is false, no perturbation is applied.",
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 1.0,
+      "min": -1.0,
+      "max": 1.0
+    },
+
+    "horizontal rotation": {
+      "_comment": "If apply is false, no perturbation is applied.",
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 0.5,
+      "min": -0.5,
+      "max": 0.5
+    },
+
+    "horizontal rotation disparity": {
+      "_comment": "If apply is false, no perturbation is applied.",
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 1.0,
+      "min": -1.0,
+      "max": 1.0
+    }
+  },
+
+  "extrinsics perturbation": {
+    "apply": true,
+
+    "_comment": [
+      "Extrinsic parameters of eyes are x, y, and z coordinates of cornea apex. Extrinsic perturbations are IPD, vertical disparity, and eye relief.",
+      "'Perturbation' means that a shift is applied on nominal values.",
+      "Eye relief is the tricky one. It means a change along nominal gaze direction for the canonical user, and depends on device.",
+      "These parameters match https://mixedrealitywiki.com/x/dDO7Bg."
+    ],
+    "IPD": {
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 3.6,
+      "_comment": "Nominal IPD is 63 mm, range is 55-72 mm. The values below are shifts.",
+      "min": -8.0,
+      "max": 9.0
+    },
+
+    "vertical disparity": {
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 0.75,
+      "min": -1.5,
+      "max": 1.5
+    },
+
+    "eye relief disparity": {
+      "_comment": [
+        "Eye relief is a sort of 'user + device' parameter.",
+        "We change eye relief by changing the location of the device in the coordinate system of the scene, but eye relief *disparity* is the difference in relief between the two eyes, and it is a user parameter."
+      ],
+      "distribution type": "truncated normal",
+      "loc": 0.0,
+      "scale": 0.75,
+      "min": -1.5,
+      "max": 1.5
+    }
+  }
+}

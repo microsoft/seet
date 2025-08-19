@@ -1,0 +1,39 @@
+{
+  "_comment": "A test device, without mirroring.",
+
+  "name": "test device",
+
+  "display angular fov": [40.0, 30.0],
+
+  "et subsystems": [
+    {
+      "_comment": "Path is the directory where the subsystem file is found. If null, the Kiruna default is used.",
+      "path": null,
+      "subsystem": "default_device/default_left_subsystem_model.json",
+
+      "requires grad": false,
+
+      "extrinsics": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ]
+    },
+
+    {
+      "_comment": "Path is the directory where the subsystem file is found. If null, the Kiruna default is used.",
+      "path": null,
+      "subsystem": "default_device/default_right_subsystem_model.json",
+
+      "requires grad": true,
+
+      "extrinsics": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ]
+    }
+  ]
+}

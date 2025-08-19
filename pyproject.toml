@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seet"
+version = "1.0.0"
+description = "SEET (Simulation Environment for Eye Tracking)"
+readme = "README.md"
+authors = [
+    {name = "Paulo R. S. Mendonca", email = "padossa@microsoft.com"},
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Computer Vision",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel",
+    "ipympl", 
+    "ipywidgets",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "parameterized",
+    "PySimpleGUI",
+    "scipy",
+    "torch",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[project.urls]
+Homepage = "https://github.com/microsoft/seet"
+Repository = "https://github.com/microsoft/seet"
+Documentation = "https://github.com/microsoft/seet"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["seet*"]
+exclude = ["tests*"]

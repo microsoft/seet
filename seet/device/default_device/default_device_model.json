@@ -1,0 +1,51 @@
+{
+  "_comment": [
+    "Lengths are in mm, angles are in degrees.",
+    "A device consists of one or more ET subsystems.",
+    "If value for key 'requires grad' is true, parameters of the ET subsystem are assumed to be differentiable."
+  ],
+
+  "name": "default device",
+
+  "display angular fov": [40.0, 30.0],
+
+  "et subsystems": [
+    {
+      "_comment": [
+        "Path is the directory where the subsystem file is found. If null, the Kiruna default is used.",
+        "If value for key 'requires grad' is true, extrinsic parameters of the ET subsystem are assumed to be differentiable."
+      ],
+
+      "path": null,
+      "subsystem": "default_device/default_left_subsystem_model.json",
+
+      "requires grad": false,
+
+      "extrinsics": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ]
+    },
+
+    {
+      "_comment": [
+        "Path is the directory where the subsystem file is found. If null, the Kiruna default is used.",
+        "If value of 'subsystem' is an integer, subsystem mirrors the previously listed subsystem indexed by that integer."
+      ],
+
+      "path": null,
+      "subsystem": "default_device/default_right_subsystem_model.json",
+
+      "requires grad": false,
+
+      "extrinsics": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ]
+    }
+  ]
+}

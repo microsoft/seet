@@ -1,0 +1,30 @@
+{
+  "_comment": "Lengths are in mm, angles are in degrees.",
+
+  "name": "default user",
+
+  "eyes": [
+    {
+      "_comment": [
+        "Extrinsics represent location of cornea apex at nominal gaze direction.",
+        "Path is the directory where the eye is found. If null, the Kiruna default is used."
+      ],
+
+      "path": null,
+      "intrinsics": "default_user/default_left_eye.json",
+
+      "requires grad": false,
+
+      "nominal gaze angles": [0.0, 7.0],
+
+      "extrinsics": [31.75, 2.0, 7.0]
+    },
+    {
+      "_comment": "If value for key 'intrinsics' is an integer, the eye is a mirror of the eye corresponding to that integer in the 'eyes' list'.",
+
+      "requires grad": false,
+
+      "intrinsics": 0
+    }
+  ]
+}

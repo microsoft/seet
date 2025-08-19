@@ -1,0 +1,39 @@
+{
+  "_comment": "Lengths are in mm, angles are in degrees.",
+
+  "name": "test user",
+
+  "eyes": [
+    {
+      "_comment": [
+        "Extrinsics represent location of pupil apex at nominal gaze direction.",
+        "Path is the directory where the eye is found. If null, the Kiruna default is used."
+      ],
+
+      "path": null,
+      "intrinsics": "default_user/default_left_eye.json",
+
+      "requires grad": false,
+
+      "nominal gaze angles": [0.0, 7.0],
+
+      "extrinsics": [31.5, 0.0, 0.0]
+    },
+
+    {
+      "_comment": [
+        "Extrinsics represent location of pupil apex at nominal gaze direction.",
+        "Path is the directory where the eye is found. If null, the Kiruna default is used."
+      ],
+
+      "path": null,
+      "intrinsics": "default_user/default_right_eye.json",
+
+      "requires grad": false,
+
+      "nominal gaze angles": [0.0, 7.0],
+
+      "extrinsics": [-31.5, 0.0, 0.0]
+    }
+  ]
+}

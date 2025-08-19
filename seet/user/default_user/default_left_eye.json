@@ -1,0 +1,48 @@
+{
+  "_comment": "Lengths are in mm, angles are in degrees.",
+
+  "name": "default left eye",
+  "requires grad": false,
+  "distance from rotation center to cornea center": 6.6,
+  "distance from rotation center to pupil plane": 10.5,
+  "distance from rotation center to limbus plane": 11.1,
+  "distance from rotation center to eyelids axis": 0.0,
+
+  "cornea": {
+    "name": "default left cornea",
+    "requires grad": false,
+    "radius of curvature": 7.85,
+    "radii factors": [1.0, 0.9, 1.0],
+    "refractive index": 1.375,
+    "num level sets": 7,
+    "num points per level set": 30
+  },
+
+  "eyelids": {
+    "name": "default left eyelids",
+    "requires grad": false,
+    "upper": {
+      "name": "default upper left eyelid",
+      "vertical angle": -22.1,
+      "vertical angle at 20 deg upward gaze": -28.0
+    },
+    "lower": {
+      "name": "default lower left eyelid",
+      "vertical angle": 28.4
+    }
+  },
+
+  "pupil": {
+    "name": "default left pupil",
+    "requires grad": false,
+    "radius": 2.5,
+    "num points": 30
+  },
+
+  "limbus": {
+    "name": "default left limbus",
+    "requires grad": false,
+    "radius": 6.0,
+    "num points": 30
+  }
+}

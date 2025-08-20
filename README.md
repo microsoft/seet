@@ -1,6 +1,6 @@
 # SEET
 
-SEET (Simulation Engine for Eye Tracking) is a Python library for modeling, simulating, and analyzing synthetic eye tracking systems. It provides tools for geometry, device modeling, optimization, sensitivity analysis, and visualization, supporting research and development in eye tracking.
+SEET (Simulation Engine for Eye Tracking) is a Python library for modeling, simulating, and analyzing synthetic eye tracking systems. It provides effective tools for geometry, device modeling, optimization, sensitivity analysis, and visualization, supporting research and development in eye tracking.
 
 ## Features
 

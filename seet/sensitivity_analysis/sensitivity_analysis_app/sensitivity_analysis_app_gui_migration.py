@@ -152,23 +152,335 @@ class SensitivityAnalysisAPP(QMainWindow):
     # Action button handlers (placeholders for now)
     def _generate_derivatives(self):
         """Handle generate derivatives button click."""
-        # TODO: Implement derivatives generation logic
-        pass
+        try:
+            # Get inputs from GUI
+            num_samples_text = self.num_samples_input.text().strip()
+            sampling_file = self.sampling_filename_input.text().strip()
+            
+            # Validate inputs
+            if not sampling_file:
+                QMessageBox.warning(
+                    self, "Input Error",
+                    "Please specify a sampling parameters file."
+                )
+                return
+                
+            if not os.path.exists(sampling_file):
+                QMessageBox.warning(
+                    self, "File Error",
+                    f"Sampling parameters file not found: {sampling_file}"
+                )
+                return
+                
+            # Parse number of samples
+            num_samples = None
+            if num_samples_text:
+                try:
+                    num_samples = int(num_samples_text)
+                    if num_samples <= 0:
+                        raise ValueError("Number of samples must be positive")
+                except ValueError:
+                    QMessageBox.warning(
+                        self, "Input Error",
+                        "Please enter a valid positive number for samples."
+                    )
+                    return
+            
+            # Save settings
+            self.settings.setValue("-num samples-", num_samples_text)
+            self.settings.setValue("-sampling file name-", sampling_file)
+            
+            # Create progress dialog
+            progress = QProgressDialog(
+                "Generating derivatives...", "Cancel", 0, 100, self
+            )
+            progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.show()
+            
+            # Generate data using the generator
+            generator = self.analysis_utils.generate_data(
+                sampling_file, num_samples
+            )
+            sample_count = 0
+            
+            try:
+                while True:
+                    try:
+                        sample_count = next(generator)
+                        # Update progress (rough estimate since we don't know
+                        # total in advance)
+                        if num_samples:
+                            progress_percent = min(
+                                int((sample_count / num_samples) * 100), 99
+                            )
+                        else:
+                            # Just show activity
+                            progress_percent = min(sample_count, 99)
+                        progress.setValue(progress_percent)
+                        
+                        # Check if user cancelled
+                        if progress.wasCanceled():
+                            QMessageBox.information(
+                                self, "Cancelled",
+                                "Data generation was cancelled."
+                            )
+                            return
+                            
+                        # Process events to keep GUI responsive
+                        QApplication.processEvents()
+                        
+                    except StopIteration:
+                        # Generation completed successfully
+                        progress.setValue(100)
+                        break
+                        
+            except Exception as e:
+                progress.close()
+                QMessageBox.critical(
+                    self, "Generation Error",
+                    f"Error during data generation: {str(e)}"
+                )
+                return
+            
+            progress.close()
+            QMessageBox.information(
+                self, "Success",
+                f"Data generation completed! Processed {sample_count} samples."
+            )
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self, "Error", f"An unexpected error occurred: {str(e)}"
+            )
+            return
 
     def _load_derivatives(self):
         """Handle load derivatives button click."""
-        # TODO: Implement derivatives loading logic
-        pass
+        try:
+            # Get derivatives file path from GUI
+            derivatives_file = self.derivatives_filename_input.text().strip()
+            
+            # Validate input
+            if not derivatives_file:
+                QMessageBox.warning(
+                    self, "Input Error",
+                    "Please specify a derivatives file."
+                )
+                return
+                
+            if not os.path.exists(derivatives_file):
+                QMessageBox.warning(
+                    self, "File Error",
+                    f"Derivatives file not found: {derivatives_file}"
+                )
+                return
+            
+            # Save setting
+            self.settings.setValue("-derivatives file name-", derivatives_file)
+            
+            # Load derivatives
+            self.analysis_utils.load_derivatives(derivatives_file)
+            self.derivatives_file_name = derivatives_file
+            
+            QMessageBox.information(
+                self, "Success",
+                "Derivatives loaded successfully!"
+            )
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self, "Error",
+                f"Error loading derivatives: {str(e)}"
+            )
+            return
 
     def _load_covariances(self):
         """Handle load covariances button click."""
-        # TODO: Implement covariances loading logic
-        pass
+        try:
+            # Get covariances folder path from GUI
+            covariances_folder = self.covariances_folder_input.text().strip()
+            
+            # Validate input
+            if not covariances_folder:
+                QMessageBox.warning(
+                    self, "Input Error",
+                    "Please specify a covariances folder."
+                )
+                return
+                
+            if not os.path.exists(covariances_folder):
+                QMessageBox.warning(
+                    self, "Folder Error",
+                    f"Covariances folder not found: {covariances_folder}"
+                )
+                return
+                
+            if not os.path.isdir(covariances_folder):
+                QMessageBox.warning(
+                    self, "Folder Error",
+                    f"Path is not a directory: {covariances_folder}"
+                )
+                return
+            
+            # Save setting
+            self.settings.setValue(
+                "-covariances folder name-", covariances_folder
+            )
+            
+            # Load configuration
+            self.analysis_utils.load_configuration(covariances_folder)
+            self.covariances_folder_name = covariances_folder
+            
+            QMessageBox.information(
+                self, "Success",
+                "Covariances loaded successfully!"
+            )
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self, "Error",
+                f"Error loading covariances: {str(e)}"
+            )
+            return
+
+    def _collect_slider_values(self):
+        """Collect standard deviation values from all sliders."""
+        std_dict = {}
+        std_names = []
+        
+        # Define slider keys in the order expected by the utility class
+        slider_keys = [
+            # LEDs (3 components)
+            "LED X", "LED Y", "LED Z",
+            # Camera extrinsics (6 components)
+            "Pitch", "Yaw", "Roll", "Camera X", "Camera Y", "Camera Z",
+            # Camera intrinsics (9 components)
+            "px", "py", "fx", "fy", "cx", "cy", "k0", "k1", "k2",
+            # Image features (3 components)
+            "Glint", "Pupil", "Limbus"
+        ]
+        
+        for key in slider_keys:
+            slider = self.findChild(QSlider, key)
+            if slider:
+                # Convert slider value back to float (remember we scaled by 20)
+                value = slider.value() / 20.0
+                std_dict[key] = value
+                std_names.append(key)
+            else:
+                # Default value if slider not found
+                std_dict[key] = 0.5
+                std_names.append(key)
+                
+        return std_names, std_dict
 
     def _plot_results(self):
         """Handle plot button click."""
-        # TODO: Implement plotting logic
-        pass
+        try:
+            # Check if derivatives are loaded
+            if self.analysis_utils.data_dictionary is None:
+                QMessageBox.warning(
+                    self, "Data Error",
+                    "Please load or generate derivatives first."
+                )
+                return
+                
+            # Check if covariances are loaded
+            if (self.analysis_utils.leds_covariance_calculator is None or
+                    self.analysis_utils.camera_covariance_calculator is None or
+                    self.analysis_utils.features_covariance_calculator is
+                    None):
+                QMessageBox.warning(
+                    self, "Configuration Error",
+                    "Please load input covariances first."
+                )
+                return
+            
+            # Get KPI values from GUI
+            try:
+                gaze_kpi_text = self.gaze_kpi_input.text().strip()
+                gaze_kpi = float(gaze_kpi_text) if gaze_kpi_text else None
+                
+                x_kpi_text = self.x_position_kpi_input.text().strip()
+                y_kpi_text = self.y_position_kpi_input.text().strip()
+                z_kpi_text = self.z_position_kpi_input.text().strip()
+                
+                x_kpi = float(x_kpi_text) if x_kpi_text else None
+                y_kpi = float(y_kpi_text) if y_kpi_text else None
+                z_kpi = float(z_kpi_text) if z_kpi_text else None
+                
+                pose_kpi = [x_kpi, y_kpi, z_kpi]
+                
+            except ValueError:
+                QMessageBox.warning(
+                    self, "Input Error",
+                    "Please enter valid numeric values for KPIs."
+                )
+                return
+            
+            # Get all plots checkbox state
+            all_plots = self.all_plots_checkbox.isChecked()
+            
+            # Collect slider values
+            std_names, std_dict = self._collect_slider_values()
+            
+            # Load standard deviations into utility class
+            self.analysis_utils.load_stds(std_names, std_dict)
+            
+            # Create progress dialog for computation
+            progress = QProgressDialog(
+                "Computing covariances...", "Cancel", 0, 100, self
+            )
+            progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.show()
+            progress.setValue(20)
+            QApplication.processEvents()
+            
+            if progress.wasCanceled():
+                return
+                
+            # Compute covariances
+            self.analysis_utils.compute_covariances()
+            progress.setValue(60)
+            QApplication.processEvents()
+            
+            if progress.wasCanceled():
+                return
+                
+            # Compute KPI covariances
+            self.analysis_utils.compute_covariances_for_KPIs()
+            progress.setValue(80)
+            QApplication.processEvents()
+            
+            if progress.wasCanceled():
+                return
+                
+            # Compute contributions
+            self.analysis_utils.compute_contributions_to_KPIs()
+            progress.setValue(90)
+            QApplication.processEvents()
+            
+            if progress.wasCanceled():
+                return
+                
+            # Plot results
+            self.analysis_utils.plot_results(gaze_kpi, pose_kpi, all_plots)
+            progress.setValue(100)
+            progress.close()
+            
+            QMessageBox.information(
+                self, "Success",
+                "Plots generated successfully!"
+            )
+            
+        except Exception as e:
+            if 'progress' in locals():
+                progress.close()
+            QMessageBox.critical(
+                self, "Error",
+                f"Error generating plots: {str(e)}"
+            )
+            return
 
     def create_tab_widget(self, name, slider_text, max_vals):
         """Create a tab widget with sliders.
@@ -365,7 +677,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         pinhole_group = self._multi_slider_widget(
             "Standard dev. for pinhole parameters [pix]:",
             ["px", "py", "fx", "fy"],
-            max=[0.5] * 4,
+            max_vals=[0.5] * 4,
             keys=["px", "py", "fx", "fy"]
         )
         

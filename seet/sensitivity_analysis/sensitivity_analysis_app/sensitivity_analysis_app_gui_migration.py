@@ -130,11 +130,21 @@ class SensitivityAnalysisAPP(QMainWindow):
 
     def _browse_derivatives_file(self):
         """Browse for derivatives file."""
+        # Default to examples directory first, then user's last path
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        default_examples_dir = os.path.join(project_root, "seet", "sensitivity_analysis", "default_derivatives")
+        
+        start_dir = self.derivatives_filename_input.text()
+        if not start_dir or not os.path.exists(start_dir):
+            start_dir = self.settings.value("-derivatives file name-", default_examples_dir)
+        if not start_dir or not os.path.exists(start_dir):
+            start_dir = default_examples_dir
+            
         file_path, _ = QFileDialog.getOpenFileName(
             self,
-            "Select Derivatives File",
-            self.derivatives_filename_input.text(),
-            "All Files (*)"
+            "Select Derivatives File (Examples available in default_derivatives folder)",
+            start_dir,
+            "Pickle Files (*.pkl);;All Files (*)"
         )
         if file_path:
             self.derivatives_filename_input.setText(file_path)
@@ -243,10 +253,61 @@ class SensitivityAnalysisAPP(QMainWindow):
                 return
             
             progress.close()
-            QMessageBox.information(
-                self, "Success",
-                f"Data generation completed! Processed {sample_count} samples."
+            
+            # Prompt to save derivatives
+            reply = QMessageBox.question(
+                self, "Save Derivatives",
+                f"Data generation completed! Processed {sample_count} samples.\n\n"
+                "Would you like to save the derivatives for future use?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.Yes
             )
+            
+            if reply == QMessageBox.StandardButton.Yes:
+                # Get save directory - default to project results folder
+                project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+                default_results_dir = os.path.join(project_root, "results", "derivatives")
+                
+                last_saved_path = self.settings.value("-last saved derivative path-", default_results_dir)
+                output_dir = QFileDialog.getExistingDirectory(
+                    self,
+                    "Save derivatives for future use",
+                    last_saved_path
+                )
+                
+                if output_dir:
+                    try:
+                        # Save the derivatives
+                        derivatives_file = self.analysis_utils.save_data(output_dir)
+                        
+                        # Update the derivatives filename input field
+                        self.derivatives_filename_input.setText(derivatives_file)
+                        
+                        # Update settings
+                        self.settings.setValue("-last saved derivative path-", output_dir)
+                        self.settings.setValue("-derivatives file name-", derivatives_file)
+                        saved_paths = self.settings.value("-saved derivative path-", [])
+                        if not isinstance(saved_paths, list):
+                            saved_paths = []
+                        if output_dir not in saved_paths:
+                            saved_paths.append(output_dir)
+                            self.settings.setValue("-saved derivative path-", saved_paths)
+                        
+                        QMessageBox.information(
+                            self, "Save Successful",
+                            f"Derivatives saved successfully to:\n{derivatives_file}"
+                        )
+                        
+                    except Exception as e:
+                        QMessageBox.critical(
+                            self, "Save Error",
+                            f"Error saving derivatives: {str(e)}"
+                        )
+            else:
+                QMessageBox.information(
+                    self, "Complete",
+                    f"Data generation completed! Processed {sample_count} samples."
+                )
             
         except Exception as e:
             QMessageBox.critical(
@@ -409,7 +470,11 @@ class SensitivityAnalysisAPP(QMainWindow):
                 y_kpi = float(y_kpi_text) if y_kpi_text else None
                 z_kpi = float(z_kpi_text) if z_kpi_text else None
                 
-                pose_kpi = [x_kpi, y_kpi, z_kpi]
+                # Structure KPIs correctly for the plotting function
+                # Gaze KPI should be a list with 1 element (or None)
+                gaze_kpi_list = [gaze_kpi] if gaze_kpi is not None else [None]
+                # Position KPI should be a list with 3 elements  
+                pose_kpi_list = [x_kpi, y_kpi, z_kpi]
                 
             except ValueError:
                 QMessageBox.warning(
@@ -464,7 +529,7 @@ class SensitivityAnalysisAPP(QMainWindow):
                 return
                 
             # Plot results
-            self.analysis_utils.plot_results(gaze_kpi, pose_kpi, all_plots)
+            self.analysis_utils.plot_results(gaze_kpi_list, pose_kpi_list, all_plots)
             progress.setValue(100)
             progress.close()
             

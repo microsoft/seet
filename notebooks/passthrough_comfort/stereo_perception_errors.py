@@ -7,7 +7,7 @@ these errors to system parameters such as camera and display calibrations and
 eye position.
 """
 
-import kiruna
+import seet
 import os
 import torch
 
@@ -29,7 +29,7 @@ class StereoPerceptionErrors():
         reprojection_depth_mm=25_000.0,
         camera_file_name=os.path.join(
             os.path.join(
-                kiruna.device.DEVICE_DIR,
+                seet.device.DEVICE_DIR,
                 r"atlas_1.2_device/atlas_1.2_left_camera.json"
             )
         )
@@ -64,13 +64,13 @@ class StereoPerceptionErrors():
         # Create a user.
         self.user_translation_mm = torch.zeros(3, requires_grad=True)
         self.user_rotation_rad = torch.zeros(3, requires_grad=True)
-        translation_toRoot_fromUser = kiruna.core.SE3(self.user_translation_mm)
-        rotation_toRoot_fromUser = kiruna.core.SO3(self.user_rotation_rad)
+        translation_toRoot_fromUser = seet.core.SE3(self.user_translation_mm)
+        rotation_toRoot_fromUser = seet.core.SO3(self.user_rotation_rad)
         transform_toRoot_fromUser = \
-            kiruna.core.SE3.compose_transforms(
+            seet.core.SE3.compose_transforms(
                 translation_toRoot_fromUser, rotation_toRoot_fromUser
             )
-        self.user = kiruna.user.UserModel(None, transform_toRoot_fromUser)
+        self.user = seet.user.UserModel(None, transform_toRoot_fromUser)
 
         # Create pass-through cameras. We root the
         # pass-through cameras on points located on the cameras presumed
@@ -177,7 +177,7 @@ class StereoPerceptionErrors():
         y,
         z,
         parameter_file_name=os.path.join(
-            kiruna.device.DEVICE_DIR,
+            seet.device.DEVICE_DIR,
             r"default_device\default_left_camera.json"
         )
     ):
@@ -213,12 +213,12 @@ class StereoPerceptionErrors():
         """
         translation_toNode_fromPoint = torch.tensor((x, y, z))
         transform_toNode_fromPoint = \
-            kiruna.core.SE3(translation_toNode_fromPoint)
-        point = kiruna.primitives.Point(node, transform_toNode_fromPoint)
+            seet.core.SE3(translation_toNode_fromPoint)
+        point = seet.primitives.Point(node, transform_toNode_fromPoint)
         camera = \
-            kiruna.device.Polynomial3KCamera(
+            seet.device.Polynomial3KCamera(
                 point,
-                kiruna.core.SE3.create_identity(),
+                seet.core.SE3.create_identity(),
                 parameter_file_name=parameter_file_name
             )
 
@@ -243,9 +243,9 @@ class StereoPerceptionErrors():
         """
         translation_toNode_fromPlane = torch.tensor((0.0, 0.0, depth_mm))
         transform_toNode_fromPlane = \
-            kiruna.core.SE3(translation_toNode_fromPlane)
+            seet.core.SE3(translation_toNode_fromPlane)
 
-        return kiruna.primitives.Plane(node, transform_toNode_fromPlane)
+        return seet.primitives.Plane(node, transform_toNode_fromPlane)
 
     @staticmethod
     def create_perturbed_camera(camera):
@@ -287,14 +287,14 @@ class StereoPerceptionErrors():
             respect to which the perturbed camera can be differentiated.
         """
         # Left camera.
-        hat_camera = kiruna.device.Polynomial3KCamera.shallowcopy(camera)
+        hat_camera = seet.device.Polynomial3KCamera.shallowcopy(camera)
         # Perturbation to camera pose.
         translation_perturbation_mm = torch.zeros(3, requires_grad=True)
         rotation_perturbation_rad = torch.zeros(3, requires_grad=True)
         se3_perturbation = \
-            kiruna.core.SE3.compose_transforms(
-                kiruna.core.SE3(translation_perturbation_mm),
-                kiruna.core.SO3(rotation_perturbation_rad)
+            seet.core.SE3.compose_transforms(
+                seet.core.SE3(translation_perturbation_mm),
+                seet.core.SO3(rotation_perturbation_rad)
             )
         # Apply perturbation.
         hat_camera.update_transform_toParent_fromSelf(se3_perturbation)
@@ -357,13 +357,13 @@ class StereoPerceptionErrors():
             in radians with respect to which the output tensor can be
             differentiated.
         """
-        hat_plane = kiruna.primitives.Plane.shallowcopy(plane)
+        hat_plane = seet.primitives.Plane.shallowcopy(plane)
         translation_perturbation_mm = torch.zeros(3, requires_grad=True)
         rotation_perturbation_rad = torch.zeros(3, requires_grad=True)
         se3_perturbation = \
-            kiruna.core.SE3.compose_transforms(
-                kiruna.core.SE3(translation_perturbation_mm),
-                kiruna.core.SO3(rotation_perturbation_rad)
+            seet.core.SE3.compose_transforms(
+                seet.core.SE3(translation_perturbation_mm),
+                seet.core.SO3(rotation_perturbation_rad)
             )
         # Apply perturbation.
         hat_plane.update_transform_toParent_fromSelf(se3_perturbation)
@@ -401,19 +401,19 @@ class StereoPerceptionErrors():
             the translation.
 
             Args:
-                eye (EyeModel): kiruna eye model.
+                eye (EyeModel): seet eye model.
 
             Outputs:
                 torch.Tensor: (3,) zero torch.Tensor with respect to which the
                 position of the input eye is differentiable.
             """
             translation_perturbation_mm = torch.zeros(3, requires_grad=True)
-            se3_perturbation = kiruna.core.SE3(translation_perturbation_mm)
+            se3_perturbation = seet.core.SE3(translation_perturbation_mm)
             eye.update_transform_toParent_fromSelf(se3_perturbation)
 
             return translation_perturbation_mm
 
-        new_user = kiruna.user.UserModel.shallowcopy(user)
+        new_user = seet.user.UserModel.shallowcopy(user)
         return_values = list()
         return_values.append(new_user)
         for eye in new_user.eyes:
@@ -482,7 +482,7 @@ class StereoPerceptionErrors():
                 )  # Parent is the user
 
             hat_display_point = \
-                kiruna.primitives.Point.create_from_coordinates_inParent(
+                seet.primitives.Point.create_from_coordinates_inParent(
                     self.user, hat_display_point_inUser
                 )  # Parent is the user.
             hat_display_point_inHatDisplayPlane = \
@@ -512,7 +512,7 @@ class StereoPerceptionErrors():
             pupil_inUser, _ = \
                 eye.pupil.get_center_and_normal_inOther(self.user)
             ray = \
-                kiruna.primitives.Ray.create_from_origin_and_dir_inParent(
+                seet.primitives.Ray.create_from_origin_and_dir_inParent(
                     self.user,
                     pupil_inUser,
                     display_point_inUser - pupil_inUser
@@ -521,9 +521,9 @@ class StereoPerceptionErrors():
 
         # Get the best approximation to the vergence point.
         hat_point_inUser = \
-            kiruna.primitives.Ray.intersect_rays_inOther(self.user, *all_rays)
+            seet.primitives.Ray.intersect_rays_inOther(self.user, *all_rays)
         disparity_mrad = \
-            kiruna.primitives.Ray.get_disparity_mrad(*all_rays)
+            seet.primitives.Ray.get_disparity_mrad(*all_rays)
 
         # Cleanup the pose graph.
         for ray in all_rays:

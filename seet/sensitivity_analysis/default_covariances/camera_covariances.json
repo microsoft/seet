@@ -1,0 +1,84 @@
+{
+  "name": "atlas_1.2 left camera sensitivity parameters",
+
+  "_comment": [
+    "If 'cov' is available it corresponds to the joint covariance matrix of extrinsic and intrinsic parameters.",
+    "'cov', if present, supersedes individual 'extrinsics' and 'intrinsics' parameters."
+  ],
+
+  "cov": null,
+
+  "extrinsics": {
+    "_comment": [
+      "If 'cov' is available it corresponds to the joint covariance matrix of translation and rotation perturbations.",
+      "'cov', if present, supersedes individual 'translation' and 'rotation' parameters.",
+      "Translation std is in units of mm.",
+      "Rotation std is in units of mrad."
+    ],
+
+    "cov": null,
+
+    "translation": {
+      "std": [0.5, 0.5, 0.5],
+      "cor": [0.0, 0.0, 0.0]
+    },
+
+    "rotation": {
+      "std": [5.0, 5.0, 5.0],
+      "cor": [0.0, 0.0, 0.0]
+    }
+  },
+
+  "intrinsics": {
+    "_comment": [
+      "If 'cov' is available it corresponds to the joint covariance matrix of pinhole and distortion parameters.",
+      "'cov', if present, supersedes individual 'pinhole' and 'distortion' parameters.",
+      "Pinhole parameters are in units of pix.",
+      "Distortion parameters are adimensional, but some of them should be thought of as percentage of focal length."
+    ],
+
+    "cov": null,
+
+    "pinhole": {
+      "_comment": [
+        "If 'cov' is available it corresponds to the joint covariance matrix of all pinhole parameters.",
+        "'cov', if present, supersedes individual 'principal point' and 'focal length' parameters.",
+        "Std of pinhole parameters has units of pix."
+      ],
+
+      "cov": null,
+
+      "focal length": {
+        "std": [0.1, 0.1],
+        "cor": [0.0]
+      },
+
+      "principal point": {
+        "std": [0.1, 0.1],
+        "cor": [0.0]
+      }
+    },
+
+    "distortion": {
+      "_comment": [
+        "The distortion model assumes Polynomial3K, with a two-dimensional distortion center and three distortion coefficients.",
+        "If 'cov' is available it corresponds to the joint covariance matrix of all distortion parameters.",
+        "'cov', if present, supersedes individual 'distortion center' and 'distortion coefficient' parameters.",
+        "Std of distortion center has units of % of focal length.",
+        "Std of distortion coefficients have units of %^-2, %^-4, and %^-6 of focal_length."
+      ],
+
+      "cov": null,
+
+      "distortion center": {
+        "std": [0.1, 0.1],
+        "cor": [0.0]
+      },
+
+      "distortion coefficients": {
+        "std": [0.1, 0.1, 0.1],
+        "cor": [0.0, 0.0, 0.0]
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 import IPython.display as display
 import ipywidgets
-import kiruna
+import seet
 import os
 
 
@@ -23,12 +23,12 @@ def get_configuration_files(scene_name):
 
     scene_file_name = \
         os.path.join(
-            kiruna.scene.SCENE_DIR,
+            seet.scene.SCENE_DIR,
             scene_name + "_scene/" + scene_name + "_scene.json"
         )
     sampler_file_name = \
         os.path.join(
-            kiruna.sampler.SAMPLER_DIR,
+            seet.sampler.SAMPLER_DIR,
             r"default_sampler/default_scene_sampler.json"
         )
 
@@ -36,18 +36,18 @@ def get_configuration_files(scene_name):
     if scene_name == "sydney":
         device_blob = \
             os.path.join(
-                kiruna.device.DEVICE_DIR,
+                seet.device.DEVICE_DIR,
                 r"sydney_device/sydney_device_calibration.json"
             )
         eye_blobs = []
 
         for eye in ("left", "right"):
             eye_file = r"sydney_user/{:s}_eye_calibration.json".format(eye)
-            eye_blob = os.path.join(kiruna.user.USER_DIR, eye_file)
+            eye_blob = os.path.join(seet.user.USER_DIR, eye_file)
             eye_blobs = eye_blobs + [eye_blob, ]
 
         scene_file_name = \
-            kiruna.scene.SceneModel.create_kiruna_scene_file(
+            seet.scene.SceneModel.create_seet_scene_file(
                 eye_blobs[0], eye_blobs[1], device_blob
             )
 
@@ -55,7 +55,7 @@ def get_configuration_files(scene_name):
     elif scene_name == "palau":
         sampler_file_name = \
             os.path.join(
-                kiruna.sampler.SAMPLER_DIR,
+                seet.sampler.SAMPLER_DIR,
                 r"palau_sampler/palau_scene_sampler.json"
             )
 
@@ -63,7 +63,7 @@ def get_configuration_files(scene_name):
     elif scene_name == "atlas_1.2":
         sampler_file_name = \
             os.path.join(
-                kiruna.sampler.SAMPLER_DIR,
+                seet.sampler.SAMPLER_DIR,
                 r"atlas_1.2_sampler/atlas_1.2_scene_sampler.json"
             )
 

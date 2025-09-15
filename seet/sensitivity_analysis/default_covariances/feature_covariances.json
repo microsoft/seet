@@ -1,0 +1,28 @@
+{
+    "_comment": [
+      "Standard deviation of input features is in pix.",
+      "Correlation coefficients are adimensional.",
+      "Standard deviations are provided for x and y pixel coordinates.",
+      "Correlation coefficient is between x and y."
+    ],
+
+    "name": "default feature covariances",
+
+    "glints": {
+        "std": [0.25, 0.25],
+        "intra cor": [0.0],
+        "inter cor": 0.0
+    },
+
+    "pupil points": {
+        "std": [0.25, 0.25],
+        "intra cor": [0.0],
+        "inter cor": 0.0
+    },
+
+    "limbus points": {
+        "std": [0.25, 0.25],
+        "intra cor": [0.0],
+        "inter cor": 0.0
+    }
+}

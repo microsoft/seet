@@ -363,7 +363,7 @@ def rotation_matrix_from_u_to_v(u, v):
     # Rotate around a vector orthogonal to both u and v.
     u_normalized = u / norm_u
     v_normalized = v / norm_v
-    cross_prod = torch.cross(u_normalized, v_normalized)
+    cross_prod = torch.linalg.cross(u_normalized, v_normalized)
     norm_cross_prod = torch.linalg.norm(cross_prod)
     if torch.abs(norm_cross_prod) < numeric.TEPS:
         # The vectors are parallel. We return a first-order approximation of

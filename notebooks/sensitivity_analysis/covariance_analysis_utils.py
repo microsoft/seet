@@ -7,8 +7,8 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 import ipywidgets
 from IPython.display import display
-from kiruna.core import numeric
-from kiruna.sensitivity_analysis import \
+from seet.core import numeric
+from seet.sensitivity_analysis import \
     CameraCovarianceCalculator, \
     EyeShapeCovariance, \
     EyePoseCovariance, \

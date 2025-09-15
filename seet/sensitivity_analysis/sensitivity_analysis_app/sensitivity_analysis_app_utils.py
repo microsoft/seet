@@ -402,7 +402,7 @@ class SensitivityAnalysisAppUtils():
         c = ("r", "g", "b", "magenta")
         error_std = (gaze_error_std, position_error_std)
         titles = ("Gaze", "Position")
-        y_labels = ("$\sigma$ [deg]", "$\sigma$ [mm]")
+        y_labels = (r"$\sigma$ [deg]", r"$\sigma$ [mm]")
         kpi_line = (gaze_kpi_deg, pose_kpi_mm)
         kpi_line_min_max = [[[0, 1]], [[0, 1 / 3], [1 / 3, 2 / 3], [2 / 3, 1]]]
         kpi_legend = False
@@ -539,7 +539,7 @@ class SensitivityAnalysisAppUtils():
         # Isolate impact of components. LEDs, cam extr., cam intr., image
         # features
         width = 0.8
-        x = (("$\\theta$",), ("$x$", "$y$", "$z$"))
+        x = ((r"$\theta$",), ("$x$", "$y$", "$z$"))
         titles = ("Gaze", "Position")
         y_labels = ("%", "%")
         contribution_label = (

@@ -6,7 +6,7 @@ depth-perception errors.
 """
 
 
-import kiruna
+import seet
 import torch
 
 
@@ -36,20 +36,20 @@ def sample_points_on_plane(
         given azimuths, elevations, and depth.
     """
     translation_toUser_fromPlane = torch.tensor((0.0, 0.0, depth_mm))
-    transform_toUser_fromPlane = kiruna.core.SE3(translation_toUser_fromPlane)
+    transform_toUser_fromPlane = seet.core.SE3(translation_toUser_fromPlane)
     plane = \
-        kiruna.primitives.Plane(
+        seet.primitives.Plane(
             error_simulator.user, transform_toUser_fromPlane
         )
     origin_inUser = torch.zeros(3)
 
     all_grid_points_inUser = list()
     for elevation_deg in elevation_samples_deg:
-        rotation_elevation = kiruna.core.rotation_around_x(elevation_deg)
+        rotation_elevation = seet.core.rotation_around_x(elevation_deg)
         grid_points_inUser_row = list()
 
         for azimuth_deg in azimuth_samples_deg:
-            rotation_azimuth = kiruna.core.rotation_around_y(-azimuth_deg)
+            rotation_azimuth = seet.core.rotation_around_y(-azimuth_deg)
             rotation = rotation_azimuth @ rotation_elevation
             direction_inUser = rotation @ torch.tensor((0.0, 0.0, 1.0))
             grid_point_inUser = \

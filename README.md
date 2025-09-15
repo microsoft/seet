@@ -28,6 +28,11 @@ conda env create -f SEET_env.yaml
 conda activate seet
 ```
 
+Install the SEET package:
+```bash
+pip install -e .
+```
+
 ## Usage
 
 Import SEET modules in your Python scripts:

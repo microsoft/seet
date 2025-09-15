@@ -25,7 +25,7 @@ Optionally, create a virtual environment using the provided `SEET_env.yaml`:
 
 ```bash
 conda env create -f SEET_env.yaml
-conda activate seet
+conda activate seet_env
 ```
 
 Install the SEET package:
@@ -50,7 +50,7 @@ Explore the `notebooks/` directory for example workflows and analysis.
 Run all unittests:
 
 ```bash
-python -m unittest discover tests
+python -m unittest discover -s tests
 ```
 
 ## Repository Structure

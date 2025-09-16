@@ -52,7 +52,7 @@
     "coordinates": "default_device/default_left_leds.json"
   },
 
-  "occluder": {
+  "no_occluder": {
     "_comments": [
       "The value for key 'requires_grad' indicates whether extrinsic parameters are supposed to be differentiable.",
       "Path is the directory where the extrinsic parameters file is found. If null, the Kiruna default is used."

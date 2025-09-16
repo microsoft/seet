@@ -1,5 +1,5 @@
 {
-  "name": "atlas_1.2 left camera sensitivity parameters",
+  "name": "default left camera sensitivity parameters",
 
   "_comment": [
     "If 'cov' is available it corresponds to the joint covariance matrix of extrinsic and intrinsic parameters.",

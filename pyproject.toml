@@ -30,6 +30,7 @@ dependencies = [
     "numpy",
     "pandas",
     "parameterized",
+    "PySide6",
     "PySimpleGUI",
     "scipy",
     "torch",

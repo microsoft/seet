@@ -1,1 +1,18 @@
+
+# Animation files - these should not be committed to the repository
 *.mp4
+*.avi
+*.gif
+*.mov
+*.mkv
+*.webm
+
+# Other large media files
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tiff
+
+# Animation temporary files
+*.tmp

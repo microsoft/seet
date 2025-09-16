@@ -107,7 +107,8 @@ class EllipseFitting():
         """_array_to_torch.
 
         Convert a numpy array to the center, angle, and radii parameters
-        that we seek to optimize.
+        that we seek to optimize. Ensures both radii are non-negative to
+        remove parameterization ambiguity.
 
         Args:
             parameter (numpy.array): (5,) numpy array with ellipse parameters.
@@ -134,6 +135,22 @@ class EllipseFitting():
             torch.tensor(
                 parameter[4], dtype=self.y_radius.dtype, requires_grad=True
             )
+
+        # Ensure both radii are non-negative to remove ambiguity
+        # If x_radius is negative, make it positive and add 180° to angle
+        # A 180° rotation flips both axes, so we must also negate y_radius
+        if self.x_radius < 0:
+            self.x_radius = -self.x_radius
+            self.y_radius = -self.y_radius  # 180° rotation flips both axes
+            self.angle_deg = self.angle_deg + 180.0
+            
+        # If y_radius is negative, make it positive and add 90° to angle
+        if self.y_radius < 0:
+            self.y_radius = -self.y_radius
+            self.angle_deg = self.angle_deg + 90.0
+            
+        # Normalize angle to [0, 360) range
+        self.angle_deg = self.angle_deg % 360.0
 
     def _torch_to_array(self):
         """_torch_to_array.

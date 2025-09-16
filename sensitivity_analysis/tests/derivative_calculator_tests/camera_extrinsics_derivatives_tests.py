@@ -1,35 +1,30 @@
-"""eye_shape_sensitivity_test.py.
-
-Tests for sensitivity analysis of eye-shape parameters.
+"""Tests for sensitivity analysis of camera extrinsic parameters.
 """
 
 
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-from sensitivity_analysis import EyeShapeDerivatives
-from tests.sensitivity_analysis_tests import test_utils
+from sensitivity_analysis import CameraExtrinsicsDerivatives
+from sensitivity_analysis.tests import test_utils
 import unittest
 
 
-class TestEyeShapeDerivatives(test_utils.TestCommonUtils):
-    """Unit tests for sensitivity analysis of eye-shape parameters.
+class TestCameraExtrinsicsDerivatives(test_utils.TestCommonUtils):
+    """Unit tests for sensitivity analysis of led locations.
     """
 
     def setUp(self):
-        """setUp.
-
-        Generate data for tests.
+        """Generate data for tests.
         """
 
         super().setUp()
 
-        self.extraSetup(EyeShapeDerivatives)
-        self.M = 9  # There are 9 eye-shape parameters.
+        self.extraSetup(CameraExtrinsicsDerivatives)
+        self.M = 6  # 3 for rotation, 3 for translation
 
     def test_size_compute_d_glints_d_parameters(self):
-        """Test derivatives of measurements with respect to eye-shape
-        parameters.
+        """Test derivatives of glints with respect to camera extrinsics.
         """
 
         self._size_test(
@@ -40,7 +35,7 @@ class TestEyeShapeDerivatives(test_utils.TestCommonUtils):
         )
 
     def test_size_compute_d_pupil_d_parameters(self):
-        """Test derivatives of pupil with respect to eye-shape parameters.
+        """Test derivatives of pupil with respect to camera extrinsics.
         """
 
         self._size_test(
@@ -50,7 +45,7 @@ class TestEyeShapeDerivatives(test_utils.TestCommonUtils):
         )
 
     def test_size_compute_d_limbus_d_parameters(self):
-        """Test derivatives of limbus with respect to eye-shape parameters.
+        """Test derivatives of limbus with respect to LED locations.
         """
 
         self._size_test(

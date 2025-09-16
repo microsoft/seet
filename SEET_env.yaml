@@ -6,17 +6,5 @@ dependencies:
   - python=3.12
   - pip
   - pip:
-    - ffmpeg-python
-    - ipykernel
-    - ipympl
-    - ipywidgets
-    - matplotlib
-    - numpy
-    - pandas
-    - parameterized
-    - PySide6
-    - PySimpleGUI
-    - scipy
-  - pip:
     - -r requirements.txt
 

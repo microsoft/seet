@@ -227,6 +227,26 @@ derivatives/
 covariances/
 sensitivity_analysis_results/
 
+# Notebook result directories
+notebooks/*/results/
+notebooks/*/*/results/
+
+# Animation and video files from notebooks
+*.mp4
+*.avi
+*.gif
+*.mov
+
+# Data files from analysis
+*.pkl
+*.pickle
+*.hdf5
+*.h5
+
+# Plot output directories with timestamps
+**/plot*/
+**/results*/
+
 # Jupyter notebook outputs (if you want to keep notebooks but not outputs)
 # *.ipynb
 

@@ -1,7 +1,7 @@
 {
   "_comments": [
     "If visualize node is true, visualization will contain a glyph at the origin of the device's coordinate system.",
-    "Path is where the subsystem files are found. If null, the Kiruna default is used."
+    "Path is where the subsystem files are found. If null, the SEET default is used."
   ],
 
   "show origin": false,

@@ -7,7 +7,7 @@
 
   "et subsystems": [
     {
-      "_comment": "Path is the directory where the subsystem file is found. If null, the Kiruna default is used.",
+      "_comment": "Path is the directory where the subsystem file is found. If null, the SEET default is used.",
       "path": null,
       "subsystem": "default_device/default_left_subsystem_model.json",
 
@@ -22,7 +22,7 @@
     },
 
     {
-      "_comment": "Path is the directory where the subsystem file is found. If null, the Kiruna default is used.",
+      "_comment": "Path is the directory where the subsystem file is found. If null, the SEET default is used.",
       "path": null,
       "subsystem": "default_device/default_right_subsystem_model.json",
 

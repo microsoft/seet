@@ -5,10 +5,10 @@
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-from seet.sensitivity_analysis import \
+from sensitivity_analysis import \
     base_covariance_calculator, \
     sensitivity_analysis_configs
-from seet.sensitivity_analysis.sensitivity_analysis_utils import \
+from sensitivity_analysis.sensitivity_analysis_utils import \
     build_cross_cov_matrix, \
     build_single_cov_matrix
 import os

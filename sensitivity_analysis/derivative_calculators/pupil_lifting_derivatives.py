@@ -1,4 +1,4 @@
-"""Derivatives of pupil and limbus with respect to lifting parameters.
+"""Derivatives of measurements with respect to pupil lifting parameters.
 
 Limbus and pupil points are, effectively, one dimensional, in that they 'slide'
 along contours. Parameterizing the contours in polar coordinates, the points
@@ -14,19 +14,17 @@ and references therein.
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-from seet.sensitivity_analysis.derivative_calculators import \
+from sensitivity_analysis.derivative_calculators import \
     basic_lifting_derivatives, data_wrapper
 
 
-class LimbusLiftingDerivatives(
+class PupilLiftingDerivatives(
     basic_lifting_derivatives.BasicLiftingDerivatives
 ):
-    """Derivatives of eye features with respect to lifting parameters.
+    """Derivatives of eye features with respect to pupil lifting parameters.
 
-    The lifting parameters are None for glints, and the parameterizing angles
-    of pupil and limbus points along their respective contours. Therefore,
-    there is one scalar lifting parameter for each pupil point, and one scalar
-    lifting parameter for each limbus point.
+    The pupil lifting parameters are the parameterizing angles of pupil points
+    along their contours.
     """
 
     def __init__(self, derivative_data: data_wrapper.DataWrapper):
@@ -39,7 +37,7 @@ class LimbusLiftingDerivatives(
 
         super().__init__(derivative_data)
 
-        self.derivative_data.limbus_inPixels = []
+        self.derivative_data.pupil_inPixels = []
 
     def get_num_parameters(self):
         """Returns the number of params. w.r.t. which derivatives are computed.
@@ -48,10 +46,10 @@ class LimbusLiftingDerivatives(
         value on the fly from data in self.derivative_data.
         """
 
-        # The number of lifting parameters is not known until the limbus is
+        # The number of lifting parameters is not known until the pupil is
         # computed.
         num_parameters = 0
-        for limbus_point in self.derivative_data.limbus_inPixels:
+        for limbus_point in self.derivative_data.pupil_inPixels:
             if limbus_point is not None:
                 num_parameters += 1
 
@@ -63,7 +61,7 @@ class LimbusLiftingDerivatives(
     # explore that.
     def _compute_d_all_x_d_parameters(self, x, x_name):
         """Computation of glint, pupil, or limbus measurements, as defined by
-        the string x_name, with respect to lifting parameters.
+        the string x_name, with respect to pupil lifting parameters.
 
         Args:
             x (list of torch.Tensor): list of (2,) torch tensor corresponding
@@ -78,4 +76,4 @@ class LimbusLiftingDerivatives(
             angle.
         """
 
-        return self._compute_d_all_x_d_lifting(x, x_name, "limbus")
+        return self._compute_d_all_x_d_lifting(x, x_name, "pupil")

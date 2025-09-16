@@ -10,7 +10,7 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
 import seet.scene as scene
-from seet.sensitivity_analysis.derivative_calculators import \
+from sensitivity_analysis.derivative_calculators import \
     derivative_parameters
 
 

@@ -6,7 +6,7 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
 import json
-import seet.sensitivity_analysis.derivative_calculators as \
+import sensitivity_analysis.derivative_calculators as \
     derivative_calculators
 import torch
 

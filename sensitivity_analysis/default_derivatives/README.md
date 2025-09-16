@@ -45,4 +45,4 @@ These derivatives were generated using the default sampling parameters from:
 - `seet/sampler/default_sampler/default_user_sampler.json`
 
 And default covariances from:
-- `seet/sensitivity_analysis/default_covariances/`
+- `sensitivity_analysis/default_covariances/`

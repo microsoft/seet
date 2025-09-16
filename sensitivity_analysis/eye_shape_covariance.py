@@ -6,9 +6,9 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
 import json
-import seet.sensitivity_analysis.derivative_calculators as derivative_calc
-import seet.sensitivity_analysis.eye_pose_covariance as eye_pose_covariance
-import seet.sensitivity_analysis.sensitivity_analysis_configs as \
+import sensitivity_analysis.derivative_calculators as derivative_calc
+import sensitivity_analysis.eye_pose_covariance as eye_pose_covariance
+import sensitivity_analysis.sensitivity_analysis_configs as \
     sensitivity_analysis_configs
 import os
 import torch

@@ -30,7 +30,7 @@ class StereoPerceptionErrors():
         camera_file_name=os.path.join(
             os.path.join(
                 seet.device.DEVICE_DIR,
-                r"atlas_1.2_device/atlas_1.2_left_camera.json"
+                r"default_device/default_left_camera.json"
             )
         )
     ):

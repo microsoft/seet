@@ -280,6 +280,9 @@ class SensitivityAnalysisAPP(QMainWindow):
                         # Save the derivatives
                         derivatives_file = self.analysis_utils.save_data(output_dir)
                         
+                        # Set the derivatives file name in the utils object for plotting
+                        self.analysis_utils.derivatives_file_name = derivatives_file
+                        
                         # Update the derivatives filename input field
                         self.derivatives_filename_input.setText(derivatives_file)
                         
@@ -304,6 +307,12 @@ class SensitivityAnalysisAPP(QMainWindow):
                             f"Error saving derivatives: {str(e)}"
                         )
             else:
+                # Even if not saved, set a temporary filename for plotting purposes
+                import datetime
+                timestamp = datetime.datetime.now().strftime("%Y-%m-%d @ %H-%M-%S.%f")
+                temp_filename = f"generated_derivatives_{timestamp}_dict.pkl"
+                self.analysis_utils.derivatives_file_name = temp_filename
+                
                 QMessageBox.information(
                     self, "Complete",
                     f"Data generation completed! Processed {sample_count} samples."

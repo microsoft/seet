@@ -12,7 +12,7 @@
   "scene parameters": {
     "_comment": [
       "Path is the directory where the scene parameters are found.",
-      "If null, the Kiruna default is used."
+      "If null, the SEET default is used."
     ],
     "path": null,
     "parameter file": "default_scene/default_scene.json"
@@ -21,7 +21,7 @@
   "user sampling parameters": {
     "_comment": [
       "Path is the directory where the user sampling file is found.",
-      "If null, the Kiruna default is used."
+      "If null, the SEET default is used."
     ],
     "apply": true,
     "path": null,

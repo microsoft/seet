@@ -14,7 +14,7 @@
       "_comments": [
         "Key 'requires grad' indicates whether camera extrinsics are to be assume differentiable.",
         "If value for key 'extrinsics type' is 'inverse', extrinsics are TO ET subsystem FROM camera.",
-        "Path is the directory where the intrinsics file is found. If null, the Kiruna default is used."
+        "Path is the directory where the intrinsics file is found. If null, the SEET default is used."
       ],
 
       "requires grad": false,
@@ -36,7 +36,7 @@
   "LEDs": {
     "_comments": [
       "The value for key 'requires_grad' indicates whether extrinsic parameters are supposed to be differentiable.",
-      "Path is the directory where the intrinsics file is found. If null, the Kiruna default is used."
+      "Path is the directory where the intrinsics file is found. If null, the SEET default is used."
     ],
 
     "requires grad": false,
@@ -55,7 +55,7 @@
   "occluder": {
     "_comments": [
       "The value for key 'requires_grad' indicates whether extrinsic parameters are supposed to be differentiable.",
-      "Path is the directory where the extrinsic parameters file is found. If null, the Kiruna default is used."
+      "Path is the directory where the extrinsic parameters file is found. If null, the SEET default is used."
     ],
 
     "requires grad": false,

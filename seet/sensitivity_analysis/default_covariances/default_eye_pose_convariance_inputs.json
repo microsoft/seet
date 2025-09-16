@@ -1,6 +1,6 @@
 {
   "_comment": [
-    "Path is the directory where the common inputs are found. If null, the Kiruna default is used.",
+    "Path is the directory where the common inputs are found. If null, the SEET default is used.",
     "'with limbus' indicates whether or not limbus features are used in the computation of eye-pose covariances.",
     "The computation of eye-pose covariances requires the eye-shape covariances."
   ],

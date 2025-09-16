@@ -62,19 +62,48 @@ class SensitivityAnalysisAPP(QMainWindow):
         Returns:
             QGroupBox: borderless PySide6 group box holding slider.
         """
-        group_box = QGroupBox(text)
+        group_box = QGroupBox()
         group_box.setStyleSheet("border: 0px;")
-        
+
         slider = QSlider(Qt.Vertical)
         slider.setRange(int(min_val * 20), int(max_val * 20))  # Scale for resolution
         slider.setValue(int(max_val * 10))  # Default to middle
         slider.setFixedSize(40, 100)
-        
+
         if key:
             slider.setObjectName(key)
-            
+
+        # Parameter label above everything
+        param_label = QLabel(text)
+        param_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        param_label.setStyleSheet("font-size: 14px;")
+
+        # Max and min labels
+        max_label = QLabel(f"{max_val:.2f}")
+        max_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        min_label = QLabel(f"{min_val:.2f}")
+        min_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Value label beside slider, updates dynamically
+        value_label = QLabel(f"{slider.value() / 20.0:.2f}")
+        value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        value_label.setStyleSheet("font-weight: bold;")
+        slider.valueChanged.connect(lambda val: value_label.setText(f"{val / 20.0:.2f}"))
+
+        # Layout: param label, max label, slider+value label (overlap), min label
         layout = QVBoxLayout()
-        layout.addWidget(slider)
+        layout.addWidget(param_label)
+        layout.addWidget(max_label)
+
+        # Stack slider and value label using QStackedLayout or QHBoxLayout
+        slider_value_layout = QHBoxLayout()
+        slider_value_layout.addStretch()
+        slider_value_layout.addWidget(slider)
+        slider_value_layout.addWidget(value_label)
+        slider_value_layout.addStretch()
+        layout.addLayout(slider_value_layout)
+
+        layout.addWidget(min_label)
         group_box.setLayout(layout)
 
         return group_box
@@ -113,6 +142,7 @@ class SensitivityAnalysisAPP(QMainWindow):
             layout.addWidget(slider_widget)
 
         group_box = QGroupBox(name)
+        group_box.setStyleSheet("QGroupBox { font-size: 14px; }")
         group_box.setLayout(layout)
         return group_box
 
@@ -574,6 +604,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         #######################################################################
         # Frame with controls for generating derivatives.
         generate_derivatives_frame = QGroupBox("Generate data")
+        generate_derivatives_frame.setStyleSheet("QGroupBox { font-size: 18px; }")
         generate_layout = QVBoxLayout()
         
         # Row 1: Number of samples
@@ -624,6 +655,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         #######################################################################
         # Frame with controls for loading derivatives.
         load_derivatives_frame = QGroupBox("Load data")
+        load_derivatives_frame.setStyleSheet("QGroupBox { font-size: 18px; }")
         load_layout = QVBoxLayout()
         
         # Derivatives file row
@@ -659,6 +691,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         #######################################################################
         # Frame with controls for loading input covariances.
         input_covariances_frame = QGroupBox("Load input covariances")
+        input_covariances_frame.setStyleSheet("QGroupBox { font-size: 18px; }")
         covariances_layout = QVBoxLayout()
         
         # Covariances folder row
@@ -692,7 +725,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         #######################################################################
 
         #######################################################################
-        # Frame with fine tunning of standard deviation of input parameters.
+        # Frame with fine tuning of standard deviation of input parameters.
 
         # Standard deviation of LED position
         led_tab = QWidget()
@@ -773,7 +806,8 @@ class SensitivityAnalysisAPP(QMainWindow):
         features_tab.setLayout(features_layout)
 
         # Standard deviation of all inputs.
-        input_standard_deviation_frame = QGroupBox("Noise fine tunning")
+        input_standard_deviation_frame = QGroupBox("Noise fine tuning")
+        input_standard_deviation_frame.setStyleSheet("QGroupBox { font-size: 18px; }")
         noise_layout = QVBoxLayout()
         
         # Create tab widget and add tabs
@@ -789,6 +823,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         #######################################################################
         # Frame with controls for plots.
         plot_parameters_frame = QGroupBox("Standard deviations at KPIs")
+        plot_parameters_frame.setStyleSheet("QGroupBox { font-size: 18px; }")
         plot_params_layout = QVBoxLayout()
         plot_params_row = QHBoxLayout()
         
@@ -824,6 +859,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         plot_parameters_frame.setLayout(plot_params_layout)
 
         plot_generation_frame = QGroupBox("Plot controls")
+        plot_generation_frame.setStyleSheet("QGroupBox { font-size: 18px; }")
         plot_gen_layout = QVBoxLayout()
         plot_gen_row = QHBoxLayout()
         
@@ -850,6 +886,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         
         # "OR" separator
         or_label = QLabel("OR")
+        or_label.setStyleSheet("QLabel { font-size: 16px; }")
         or_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(or_label)
         
@@ -859,6 +896,10 @@ class SensitivityAnalysisAPP(QMainWindow):
         separator = QFrame()
         separator.setFrameShape(QFrame.Shape.HLine)
         separator.setFrameShadow(QFrame.Shadow.Sunken)
+        separator.setLineWidth(3)
+        separator.setMidLineWidth(6)
+        separator.setMinimumHeight(8)
+        separator.setStyleSheet("QFrame { border-top: 4px solid #444; }")
         main_layout.addWidget(separator)
         
         main_layout.addWidget(input_covariances_frame)

@@ -1,5 +1,5 @@
 {
-  "_comment": "Path is where the default style files are found. If null, the Kiruna default is used.",
+  "_comment": "Path is where the default style files are found. If null, the SEET default is used.",
 
   "path": null,
 

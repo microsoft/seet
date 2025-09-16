@@ -14,7 +14,7 @@ import os
 
 
 def get_configuration_files(scene_name):
-    """Get files for configuring scene and sampler for different Kiruna scenes.
+    """Get files for configuring scene and sampler for different SEET scenes.
 
     Args:
         scene_name (str): scene name.
@@ -37,7 +37,7 @@ def get_configuration_files(scene_name):
 def get_device(device_list=["default"]):
     """get_device.
 
-    Select the Kiruna scene from a dropdown list
+    Select the SEET scene from a dropdown list
 
     Args:
         device_list (list, optional): List of valid devices. Defaults to

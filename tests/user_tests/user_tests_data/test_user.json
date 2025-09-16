@@ -7,7 +7,7 @@
     {
       "_comment": [
         "Extrinsics represent location of pupil apex at nominal gaze direction.",
-        "Path is the directory where the eye is found. If null, the Kiruna default is used."
+        "Path is the directory where the eye is found. If null, the SEET default is used."
       ],
 
       "path": null,
@@ -23,7 +23,7 @@
     {
       "_comment": [
         "Extrinsics represent location of pupil apex at nominal gaze direction.",
-        "Path is the directory where the eye is found. If null, the Kiruna default is used."
+        "Path is the directory where the eye is found. If null, the SEET default is used."
       ],
 
       "path": null,

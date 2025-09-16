@@ -1,7 +1,7 @@
 {
   "_comment": [
     "In addition to visualization style for the user and device, this also sets style parameters for elements that depend on both: glints, *refracted* pupil, and occluding contour.",
-    "Path is where the default style files are found. If null, the Kiruna default is used."
+    "Path is where the default style files are found. If null, the SEET default is used."
   ],
 
   "path": null,

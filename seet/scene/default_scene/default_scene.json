@@ -18,7 +18,7 @@
 
     "requires grad": false,
 
-    "_comment": "Path is the directory where the camera file is found. If null, the Kiruna default is used.",
+    "_comment": "Path is the directory where the camera file is found. If null, the SEET default is used.",
     "path": null,
     "parameter file": "default_user/default_user.json"
   },
@@ -33,7 +33,7 @@
 
     "requires grad": false,
 
-    "_comment": "Path is the directory where the device file is found. If null, the Kiruna default is used.",
+    "_comment": "Path is the directory where the device file is found. If null, the SEET default is used.",
     "path": null,
     "parameter file": "default_device/default_device_model.json"
   }

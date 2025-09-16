@@ -2,7 +2,7 @@
   "_comment": [
     "This file has parameters for the sampling of user (not eye) parameters: IPD, eye relief, vertical disparity, and nominal gaze.",
     "If the parameter 'seed' is not 'null', then the seed of the internal random sampler will be set to that value",
-    "Path is the directory where the eye sampler is found. If null the Kiruna default is used.",
+    "Path is the directory where the eye sampler is found. If null the SEET default is used.",
     "Intrinsics is the file with the sampling parameters of the eye. If null, no sampling of the eye-shape parameters is performed.",
     "Perturbations affect both eyes.",
     "Lengths are in mm, angles are in degrees."

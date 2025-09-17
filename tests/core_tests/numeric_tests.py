@@ -67,19 +67,16 @@ class TestNumeric(unittest.TestCase):
         """Test compute_numeric_jacobian_from_tensors with device parameter."""
         if device == "cuda" and not torch.cuda.is_available():
             self.skipTest("CUDA not available")
-        
+
         x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True)
-        
+
         def test_func(x):
             return torch.sum(x ** 2)
         
         result = core.compute_numeric_jacobian_from_tensors(x, test_func, device=device)
         
         self.assertEqual(result.device.type, device)
-        
-        expected = 2 * x
-        if device != x.device.type:
-            expected = expected.to(device)
+        expected = (2 * x).to(device)
         self.assertTrue(torch.allclose(result.squeeze(), expected, rtol=1e-4))
 
     @parameterized.expand([
@@ -91,16 +88,13 @@ class TestNumeric(unittest.TestCase):
         if device == "cuda" and not torch.cuda.is_available():
             self.skipTest("CUDA not available")
         
-        x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True)
+        x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True, device=device)
         y = torch.sum(x ** 2)
         
-        result = core.compute_auto_jacobian_from_tensors(y, x, device=device)
-        
+        result = core.compute_auto_jacobian_from_tensors(y, x)
         self.assertEqual(result.device.type, device)
         
-        expected = 2 * x
-        if device != x.device.type:
-            expected = expected.to(device)
+        expected = (2 * x).to(device)
         self.assertTrue(torch.allclose(result, expected, rtol=1e-4))
 
     @parameterized.expand([
@@ -112,18 +106,15 @@ class TestNumeric(unittest.TestCase):
         if device == "cuda" and not torch.cuda.is_available():
             self.skipTest("CUDA not available")
         
-        x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True)
+        x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True, device=device)
         y = torch.sum(x ** 2)
         
         dy_dx = core.compute_auto_jacobian_from_tensors(y, x, create_graph=True)
         
-        result = core.alt_compute_auto_jacobian_from_tensors(dy_dx, x, device=device)
+        result = core.alt_compute_auto_jacobian_from_tensors(dy_dx, x)
         
         self.assertEqual(result.device.type, device)
-        
-        expected = 2 * torch.eye(len(x))
-        if device != x.device.type:
-            expected = expected.to(device)
+        expected = 2 * torch.eye(len(x),device=device)
         self.assertTrue(torch.allclose(result, expected, rtol=1e-4))
 
     def test_device_parameter_consistency(self):
@@ -136,12 +127,15 @@ class TestNumeric(unittest.TestCase):
         def test_func(x):
             return torch.sum(x ** 2)
         
-        cpu_numeric = core.compute_numeric_jacobian_from_tensors(x, test_func, device="cpu")
-        cuda_numeric = core.compute_numeric_jacobian_from_tensors(x, test_func, device="cuda")
-        
+        x = x.to("cpu")
+        cpu_numeric = core.compute_numeric_jacobian_from_tensors(x, test_func)
         y = test_func(x)
-        cpu_auto = core.compute_auto_jacobian_from_tensors(y, x, device="cpu")
-        cuda_auto = core.compute_auto_jacobian_from_tensors(y, x, device="cuda")
+        cpu_auto = core.compute_auto_jacobian_from_tensors(y, x)
+
+        x = x.to("cuda")
+        cuda_numeric = core.compute_numeric_jacobian_from_tensors(x, test_func)
+        y = test_func(x)
+        cuda_auto = core.compute_auto_jacobian_from_tensors(y, x)
         
         # Verify results are consistent across devices
         self.assertTrue(torch.allclose(cpu_numeric.cpu(), cuda_numeric.cpu(), rtol=1e-4))

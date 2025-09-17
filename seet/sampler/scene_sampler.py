@@ -770,12 +770,12 @@ class SceneSampler:
                     #
                     # d_pupil_center_d_pose_d_(angles, c, dist) =
                     #   (d_n_d_angles * dist, eye(3), n)
-
+                    derivative_data = derivative_data.to(device)
                     eye = derivative_data.eye
                     n = eye.get_gaze_direction_inParent()
                     d_n_d_angles = \
                         core.compute_auto_jacobian_from_tensors(
-                            n, derivative_data.eye_pose_parameters.angles_deg, device=device
+                            n, derivative_data.eye_pose_parameters.angles_deg
                         )
 
                     dist = eye.distance_from_rotation_center_to_pupil_plane

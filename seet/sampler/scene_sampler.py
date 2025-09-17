@@ -24,6 +24,8 @@ import pandas
 import random
 import torch
 
+CPU_DEVICE_NAME = "cpu"
+
 
 class SceneSampler:
     """
@@ -704,7 +706,7 @@ class SceneSampler:
         d_shape_d_data_indices = []
         d_pose_d_data_indices = []
         counter = 0
-        device = device if device is not None else torch.device('cpu')
+        device = device if device is not None else torch.device(CPU_DEVICE_NAME)
         for scene_idx, et_scene in enumerate(self.generate_samples()):
             derivative_data = DataWrapper(et_scene)
 
@@ -770,6 +772,8 @@ class SceneSampler:
                     #
                     # d_pupil_center_d_pose_d_(angles, c, dist) =
                     #   (d_n_d_angles * dist, eye(3), n)
+
+                    # Move derivative_data to GPU in preparation for jacobian computation
                     derivative_data = derivative_data.to(device)
                     eye = derivative_data.eye
                     n = eye.get_gaze_direction_inParent()
@@ -777,6 +781,12 @@ class SceneSampler:
                         core.compute_auto_jacobian_from_tensors(
                             n, derivative_data.eye_pose_parameters.angles_deg
                         )
+
+                    # Move back to CPU to avoid device mismatch
+                    derivative_data = derivative_data.to(CPU_DEVICE_NAME)
+                    eye = eye.to(CPU_DEVICE_NAME)
+                    n = n.to(CPU_DEVICE_NAME)
+                    d_n_d_angles = d_n_d_angles.to(CPU_DEVICE_NAME)
 
                     dist = eye.distance_from_rotation_center_to_pupil_plane
                     d_pupil_d_pose_and_dist_ = \

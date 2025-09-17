@@ -773,8 +773,9 @@ class SceneSampler:
                     # d_pupil_center_d_pose_d_(angles, c, dist) =
                     #   (d_n_d_angles * dist, eye(3), n)
 
-                    # Move derivative_data to GPU in preparation for jacobian computation
-                    derivative_data = derivative_data.to(device)
+                    # TODO: n and derivative_data.eye_pose_parameters.angles_deg should be on GPU if device is GPU.
+                    # However, because they are both derived from the scene, which is on CPU, we likely need to move the entire scene to GPU
+                    # to make sure we don't break the computation graph
                     eye = derivative_data.eye
                     n = eye.get_gaze_direction_inParent()
                     d_n_d_angles = \
@@ -782,11 +783,6 @@ class SceneSampler:
                             n, derivative_data.eye_pose_parameters.angles_deg
                         )
 
-                    # Move back to CPU to avoid device mismatch
-                    derivative_data = derivative_data.to(CPU_DEVICE_NAME)
-                    eye = eye.to(CPU_DEVICE_NAME)
-                    n = n.to(CPU_DEVICE_NAME)
-                    d_n_d_angles = d_n_d_angles.to(CPU_DEVICE_NAME)
 
                     dist = eye.distance_from_rotation_center_to_pupil_plane
                     d_pupil_d_pose_and_dist_ = \

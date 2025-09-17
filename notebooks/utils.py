@@ -17,8 +17,7 @@ def get_configuration_files(scene_name):
     """Get files for configuring scene and sampler for different SEET scenes.
 
     Args:
-        scene_name (str): scene name. Should be one of "palau", "atlas_1.2",
-        "sydney", or "tasman".
+        scene_name (str): scene name.
     """
 
     scene_file_name = \
@@ -32,58 +31,23 @@ def get_configuration_files(scene_name):
             r"default_sampler/default_scene_sampler.json"
         )
 
-    # Sydney needs to construct scene with parameters
-    if scene_name == "sydney":
-        device_blob = \
-            os.path.join(
-                seet.device.DEVICE_DIR,
-                r"sydney_device/sydney_device_calibration.json"
-            )
-        eye_blobs = []
-
-        for eye in ("left", "right"):
-            eye_file = r"sydney_user/{:s}_eye_calibration.json".format(eye)
-            eye_blob = os.path.join(seet.user.USER_DIR, eye_file)
-            eye_blobs = eye_blobs + [eye_blob, ]
-
-        scene_file_name = \
-            seet.scene.SceneModel.create_seet_scene_file(
-                eye_blobs[0], eye_blobs[1], device_blob
-            )
-
-    # Palau has a special sampler.
-    elif scene_name == "palau":
-        sampler_file_name = \
-            os.path.join(
-                seet.sampler.SAMPLER_DIR,
-                r"palau_sampler/palau_scene_sampler.json"
-            )
-
-    # Atlas 1.2 has a special sampler
-    elif scene_name == "atlas_1.2":
-        sampler_file_name = \
-            os.path.join(
-                seet.sampler.SAMPLER_DIR,
-                r"atlas_1.2_sampler/atlas_1.2_scene_sampler.json"
-            )
-
     return scene_file_name, sampler_file_name
 
 
-def get_device(device_list=["atlas_1.2", "palau", "sydney", "tasman", "p47", "p47_POC", "test", "p53_wearable"]):
+def get_device(device_list=["default"]):
     """get_device.
 
     Select the SEET scene from a dropdown list
 
     Args:
         device_list (list, optional): List of valid devices. Defaults to
-        ["atlas_1.2", "palau", "sydney", "tasman"].
+        ["default"].
     """
 
     dropdown_widget = \
         ipywidgets.RadioButtons(
-            options=["atlas_1.2", "palau", "sydney", "tasman", "p47", "p47_POC", "test", "p53_wearable"],
-            value="p47",
+            options=["default"],
+            value="default",
             description="Device:",
             disabled=False
         )

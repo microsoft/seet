@@ -61,6 +61,9 @@ def compute_numeric_jacobian_from_tensors(x, fun, delta=TEPS * 100, device=None)
         fun (callable): function taking torch Tensor x as input and returning a
         torch Tensor y.
 
+        device (torch.device or str, optional): If specified, the computation is
+        performed on this device. If None, the device of the input tensor x is used.
+
     Returns:
         torch.Tensor: torch.Tensor with shape of (y, x) corresponding to the
         Jacobian of fun with respect to x (y is the output of fun(x)).

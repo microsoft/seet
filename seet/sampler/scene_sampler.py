@@ -477,7 +477,7 @@ class SceneSampler:
 
         return pandas.DataFrame(data, columns=header)
 
-    def generate_data_for_iris_analysis(self, num_angles=10, num_radii=10, device=None):
+    def generate_data_for_iris_analysis(self, num_angles=10, num_radii=10):
         """generate_data_for_iris_analysis.
 
         Generate data with area of visible iris in mm, and area of projected
@@ -588,7 +588,7 @@ class SceneSampler:
 
                             d_inPixels_d_in2DIris = \
                                 core.compute_auto_jacobian_from_tensors(
-                                    refraction_point_inPixels, point_in2DIris, device=device
+                                    refraction_point_inPixels, point_in2DIris
                                 )
 
                             area_pix += \
@@ -635,6 +635,9 @@ class SceneSampler:
             pose_grid (list, optional): number of horizontal and vertical grid
             points towards which simulated users will direct their gaze during
             eye-pose estimation. Defaults to [5, 4].
+
+            device (torch.device, optional): device on which to perform the
+            computations. If None, use CPU. Defaults to None.
 
         Returns:
             list of list of torch.Tensor: (N, 2) list of torch tensors, where

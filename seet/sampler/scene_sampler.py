@@ -477,7 +477,7 @@ class SceneSampler:
 
         return pandas.DataFrame(data, columns=header)
 
-    def generate_data_for_iris_analysis(self, num_angles=10, num_radii=10):
+    def generate_data_for_iris_analysis(self, num_angles=10, num_radii=10, device=None):
         """generate_data_for_iris_analysis.
 
         Generate data with area of visible iris in mm, and area of projected
@@ -588,7 +588,7 @@ class SceneSampler:
 
                             d_inPixels_d_in2DIris = \
                                 core.compute_auto_jacobian_from_tensors(
-                                    refraction_point_inPixels, point_in2DIris
+                                    refraction_point_inPixels, point_in2DIris, device=device
                                 )
 
                             area_pix += \
@@ -614,7 +614,8 @@ class SceneSampler:
     def generate_data_for_sensitivity_analysis(
         self,
         calib_grid=[3, 3],
-        pose_grid=[5, 4]
+        pose_grid=[5, 4],
+        device=None
     ):
         """Generate data for sensitivity analysis.
 
@@ -700,6 +701,7 @@ class SceneSampler:
         d_shape_d_data_indices = []
         d_pose_d_data_indices = []
         counter = 0
+        device = device if device is not None else torch.device('cpu')
         for scene_idx, et_scene in enumerate(self.generate_samples()):
             derivative_data = DataWrapper(et_scene)
 
@@ -770,7 +772,7 @@ class SceneSampler:
                     n = eye.get_gaze_direction_inParent()
                     d_n_d_angles = \
                         core.compute_auto_jacobian_from_tensors(
-                            n, derivative_data.eye_pose_parameters.angles_deg
+                            n, derivative_data.eye_pose_parameters.angles_deg, device=device
                         )
 
                     dist = eye.distance_from_rotation_center_to_pupil_plane

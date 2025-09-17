@@ -12,11 +12,12 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QGroupBox, QTabWidget, QLabel, QLineEdit, QPushButton, QSlider,
     QCheckBox, QFrame, QSpacerItem, QSizePolicy, QFileDialog,
-    QMessageBox, QProgressDialog
+    QMessageBox, QProgressDialog, QComboBox
 )
 from PySide6.QtCore import Qt, QSettings, Signal, QObject
 from PySide6.QtGui import QCloseEvent
 import sensitivity_analysis_app_utils
+import torch
 
 
 class SensitivityAnalysisAPP(QMainWindow):
@@ -34,10 +35,45 @@ class SensitivityAnalysisAPP(QMainWindow):
         self.analysis_utils = \
             sensitivity_analysis_app_utils.SensitivityAnalysisAppUtils()
 
+        initial_device = self.settings.value("compute_device", "cpu")
+        self._update_device(initial_device)
+
         self.create_window()
+        
+        current_index = self.device_combo.findText(initial_device)
+        if current_index >= 0:
+            self.device_combo.setCurrentIndex(current_index)
         
         # Show the window
         self.show()
+
+    def _update_device(self, device_name):
+        """Update the compute device for PyTorch operations."""
+        if device_name == "cuda":
+            if torch.cuda.is_available():
+                selected_device = torch.device('cuda')
+            else:
+                # Fall back to CPU if CUDA not available
+                selected_device = torch.device('cpu')
+                if hasattr(self, 'device_combo'):  # Only show warning if GUI exists
+                    QMessageBox.warning(
+                        self, "CUDA Not Available",
+                        "CUDA is not available. Falling back to CPU."
+                    )
+                    current_index = self.device_combo.findText('cpu')
+                    self.device_combo.setCurrentIndex(current_index)
+        else:
+            selected_device = torch.device('cpu')
+        
+        self.analysis_utils.device = selected_device
+        self.settings.setValue("compute_device", device_name)
+        
+        return selected_device
+
+    def _on_device_changed(self, device_name):
+        """Handle device combo box changes."""
+        self.device_combo.hidePopup()
+        self._update_device(device_name)
 
     def closeEvent(self, event: QCloseEvent):
         """Handle window close event (replaces sg.WIN_CLOSED).
@@ -620,8 +656,22 @@ class SensitivityAnalysisAPP(QMainWindow):
         samples_row.addWidget(samples_label)
         samples_row.addWidget(self.num_samples_input)
         samples_row.addStretch()
+
+        # Row 2: Compute device selection
+        device_row = QHBoxLayout()
+        device_label = QLabel("Compute device:")
+        device_label.setMinimumWidth(150)
+        self.device_combo = QComboBox()
+        self.device_combo.setObjectName("-DEVICE-")
+        self.device_combo.addItems(["abc", "cpu", "cuda"])
+        self.device_combo.setMaximumWidth(100)
+        self.device_combo.currentTextChanged.connect(self._on_device_changed)
+        device_row.addWidget(device_label)
+        device_row.addWidget(self.device_combo)
+        device_row.addStretch()
+
         
-        # Row 2: Sampling parameters file
+        # Row 3: Sampling parameters file
         sampling_row = QHBoxLayout()
         sampling_label = QLabel("Sampling-parameters file:")
         sampling_label.setMinimumWidth(150)
@@ -648,6 +698,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         sampling_row.addWidget(self.generate_derivatives_btn)
         
         generate_layout.addLayout(samples_row)
+        generate_layout.addLayout(device_row)
         generate_layout.addLayout(sampling_row)
         generate_derivatives_frame.setLayout(generate_layout)
         #######################################################################

@@ -7,7 +7,7 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 import sensitivity_analysis as sensitivity_analysis
 from sensitivity_analysis import EyeShapeCovariance
-from tests.sensitivity_analysis_tests import \
+from sensitivity_analysis.tests import \
     test_utils, \
     sensitivity_analysis_tests_configs
 import os

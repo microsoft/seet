@@ -1,30 +1,34 @@
-"""Tests for sensitivity analysis of camera extrinsic parameters.
+"""eye_pose_sensitivity_test.py.
+
+Tests for sensitivity analysis of eye-pose parameters.
 """
 
 
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-from sensitivity_analysis import CameraExtrinsicsDerivatives
-from tests.sensitivity_analysis_tests import test_utils
+from sensitivity_analysis import EyePoseDerivatives
+from sensitivity_analysis.tests import test_utils
 import unittest
 
 
-class TestCameraExtrinsicsDerivatives(test_utils.TestCommonUtils):
-    """Unit tests for sensitivity analysis of led locations.
+class TestEyePoseDerivatives(test_utils.TestCommonUtils):
+    """Unit tests for sensitivity analysis of eye-pose parameters.
     """
 
     def setUp(self):
-        """Generate data for tests.
+        """setUp.
+
+        Generate data for tests.
         """
 
         super().setUp()
 
-        self.extraSetup(CameraExtrinsicsDerivatives)
-        self.M = 6  # 3 for rotation, 3 for translation
+        self.extraSetup(EyePoseDerivatives)
+        self.M = 5  # There are 5 eye-pose parameters.
 
     def test_size_compute_d_glints_d_parameters(self):
-        """Test derivatives of glints with respect to camera extrinsics.
+        """Test derivatives of glints with respect to eye-pose parameters.
         """
 
         self._size_test(
@@ -35,7 +39,7 @@ class TestCameraExtrinsicsDerivatives(test_utils.TestCommonUtils):
         )
 
     def test_size_compute_d_pupil_d_parameters(self):
-        """Test derivatives of pupil with respect to camera extrinsics.
+        """Test derivatives of pupil with respect to eye-pose parameters.
         """
 
         self._size_test(
@@ -45,7 +49,7 @@ class TestCameraExtrinsicsDerivatives(test_utils.TestCommonUtils):
         )
 
     def test_size_compute_d_limbus_d_parameters(self):
-        """Test derivatives of limbus with respect to LED locations.
+        """Test derivatives of limbus with respect to eye-pose parameters.
         """
 
         self._size_test(

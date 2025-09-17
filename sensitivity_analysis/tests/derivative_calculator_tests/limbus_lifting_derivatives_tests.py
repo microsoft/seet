@@ -6,7 +6,7 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
 from sensitivity_analysis import LimbusLiftingDerivatives
-from tests.sensitivity_analysis_tests import test_utils
+from sensitivity_analysis.tests import test_utils
 import torch
 import unittest
 

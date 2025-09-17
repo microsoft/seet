@@ -1,19 +1,19 @@
-"""eye_pose_sensitivity_test.py.
+"""eye_shape_sensitivity_test.py.
 
-Tests for sensitivity analysis of eye-pose parameters.
+Tests for sensitivity analysis of eye-shape parameters.
 """
 
 
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-from sensitivity_analysis import EyePoseDerivatives
-from tests.sensitivity_analysis_tests import test_utils
+from sensitivity_analysis import EyeShapeDerivatives
+from sensitivity_analysis.tests import test_utils
 import unittest
 
 
-class TestEyePoseDerivatives(test_utils.TestCommonUtils):
-    """Unit tests for sensitivity analysis of eye-pose parameters.
+class TestEyeShapeDerivatives(test_utils.TestCommonUtils):
+    """Unit tests for sensitivity analysis of eye-shape parameters.
     """
 
     def setUp(self):
@@ -24,11 +24,12 @@ class TestEyePoseDerivatives(test_utils.TestCommonUtils):
 
         super().setUp()
 
-        self.extraSetup(EyePoseDerivatives)
-        self.M = 5  # There are 5 eye-pose parameters.
+        self.extraSetup(EyeShapeDerivatives)
+        self.M = 9  # There are 9 eye-shape parameters.
 
     def test_size_compute_d_glints_d_parameters(self):
-        """Test derivatives of glints with respect to eye-pose parameters.
+        """Test derivatives of measurements with respect to eye-shape
+        parameters.
         """
 
         self._size_test(
@@ -39,7 +40,7 @@ class TestEyePoseDerivatives(test_utils.TestCommonUtils):
         )
 
     def test_size_compute_d_pupil_d_parameters(self):
-        """Test derivatives of pupil with respect to eye-pose parameters.
+        """Test derivatives of pupil with respect to eye-shape parameters.
         """
 
         self._size_test(
@@ -49,7 +50,7 @@ class TestEyePoseDerivatives(test_utils.TestCommonUtils):
         )
 
     def test_size_compute_d_limbus_d_parameters(self):
-        """Test derivatives of limbus with respect to eye-pose parameters.
+        """Test derivatives of limbus with respect to eye-shape parameters.
         """
 
         self._size_test(

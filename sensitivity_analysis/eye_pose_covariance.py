@@ -7,14 +7,14 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 import json
 import seet.core as core
-import seet.sensitivity_analysis.camera_covariance_calculator as \
+import sensitivity_analysis.camera_covariance_calculator as \
     camera_covariance_calculator
-import seet.sensitivity_analysis.derivative_calculators as derivative_calc
-import seet.sensitivity_analysis.features_covariance_calculator as \
+import sensitivity_analysis.derivative_calculators as derivative_calc
+import sensitivity_analysis.features_covariance_calculator as \
     feature_covariance_calculator
-import seet.sensitivity_analysis.leds_covariance_calculator as \
+import sensitivity_analysis.leds_covariance_calculator as \
     leds_covariance_calculator
-import seet.sensitivity_analysis.sensitivity_analysis_configs as \
+import sensitivity_analysis.sensitivity_analysis_configs as \
     sensitivity_analysis_configs
 import os
 import torch

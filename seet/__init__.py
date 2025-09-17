@@ -4,6 +4,5 @@ from . import optimization
 from . import primitives
 from . import sampler
 from . import scene
-from . import sensitivity_analysis
 from . import user
 from . import visualization

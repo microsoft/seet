@@ -5,7 +5,7 @@
 __author__ = "Paulo R. S. Mendonca (padossa@microsof.com)"
 
 
-from seet.sensitivity_analysis.derivative_calculators import data_wrapper
+from sensitivity_analysis.derivative_calculators import data_wrapper
 
 
 class BasicDerivatives():

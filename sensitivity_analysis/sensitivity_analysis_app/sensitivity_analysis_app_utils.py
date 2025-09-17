@@ -7,19 +7,29 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 import datetime
 import json
+import os
+import pickle
+import sys
+import torch
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+# Add the project root directory to Python path to allow importing sensitivity_analysis
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)  # sensitivity_analysis directory
+project_root = os.path.dirname(parent_dir)  # project root directory
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 from seet.core import numeric
 from seet.sampler import SceneSampler
-from seet.sensitivity_analysis import \
+from sensitivity_analysis import \
     CameraCovarianceCalculator, \
     EyeShapeCovariance, \
     EyePoseCovariance, \
     FeaturesCovarianceCalculator, \
     LEDsCovarianceCalculator
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import os
-import pickle
-import torch
 
 
 class SensitivityAnalysisAppUtils():

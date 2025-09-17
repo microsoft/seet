@@ -5,7 +5,7 @@
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-import seet.sensitivity_analysis as sensitivity_analysis
+import sensitivity_analysis as sensitivity_analysis
 from tests.sensitivity_analysis_tests import test_utils
 from parameterized import parameterized_class
 import torch

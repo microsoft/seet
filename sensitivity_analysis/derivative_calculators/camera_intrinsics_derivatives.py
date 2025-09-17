@@ -9,7 +9,7 @@ __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
 import seet.core as core
-from seet.sensitivity_analysis.derivative_calculators import \
+from sensitivity_analysis.derivative_calculators import \
     basic_derivatives, data_wrapper
 import torch
 

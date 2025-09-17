@@ -7,7 +7,7 @@ Tests for sensitivity analysis of eye-pose parameters.
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
-from seet.sensitivity_analysis import EyePoseDerivatives
+from sensitivity_analysis import EyePoseDerivatives
 from tests.sensitivity_analysis_tests import test_utils
 import unittest
 

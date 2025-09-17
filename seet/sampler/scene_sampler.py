@@ -12,12 +12,6 @@ import seet.core as core
 import seet.scene as scene
 from seet.sampler import sampler_configs, sampler_utils
 from seet.sampler import user_sampler, device_sampler
-from seet.sensitivity_analysis import \
-    DataWrapper, \
-    EyePoseCovariance, \
-    EyePoseDerivatives, \
-    EyeShapeCovariance, \
-    EyeShapeDerivatives
 import numpy
 import os
 import pandas
@@ -647,6 +641,15 @@ class SceneSampler:
             LEDs, camera extrinsic and intrinsic parameters, and glints, pupil
             and limbus points.
         """
+        
+        # Import here to avoid circular imports
+        from sensitivity_analysis import (
+            DataWrapper, 
+            EyePoseCovariance, 
+            EyePoseDerivatives, 
+            EyeShapeCovariance, 
+            EyeShapeDerivatives
+        )
 
         num_shape_params = EyeShapeDerivatives.get_num_parameters()
         num_pose_params = EyePoseDerivatives.get_num_parameters()

@@ -663,7 +663,7 @@ class SensitivityAnalysisAPP(QMainWindow):
         device_label.setMinimumWidth(150)
         self.device_combo = QComboBox()
         self.device_combo.setObjectName("-DEVICE-")
-        self.device_combo.addItems(["abc", "cpu", "cuda"])
+        self.device_combo.addItems(["cpu", "cuda"])
         self.device_combo.setMaximumWidth(100)
         self.device_combo.currentTextChanged.connect(self._on_device_changed)
         device_row.addWidget(device_label)

@@ -33,11 +33,17 @@ from sensitivity_analysis import \
 
 
 class SensitivityAnalysisAppUtils():
-    def __init__(self):
+    def __init__(self, device: str | torch.device | None =None):
         self.data_dictionary = None
         self.leds_covariance_calculator = None
         self.camera_covariance_calculator = None
         self.features_covariance_calculator = None
+        if device is None:
+            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        elif isinstance(device, str):
+            self.device = torch.device(device)
+        else:
+            self.device = device
 
     def load_derivatives(self, derivatives_file_name):
         self.derivatives_file_name = derivatives_file_name
@@ -60,7 +66,7 @@ class SensitivityAnalysisAppUtils():
         # it emits a "StopIteration" signal containing the result. Because of
         # the yielding, the output of the method is a generator, that is best
         # used inside a loop.
-        generator = scene_sampler.generate_data_for_sensitivity_analysis()
+        generator = scene_sampler.generate_data_for_sensitivity_analysis(device=self.device)
         while True:
             try:
                 # This can be used by a higher-level function, e.g., a GUI, to

@@ -18,6 +18,8 @@ import pandas
 import random
 import torch
 
+CPU_DEVICE_NAME = "cpu"
+
 
 class SceneSampler:
     """
@@ -608,7 +610,8 @@ class SceneSampler:
     def generate_data_for_sensitivity_analysis(
         self,
         calib_grid=[3, 3],
-        pose_grid=[5, 4]
+        pose_grid=[5, 4],
+        device=None
     ):
         """Generate data for sensitivity analysis.
 
@@ -628,6 +631,9 @@ class SceneSampler:
             pose_grid (list, optional): number of horizontal and vertical grid
             points towards which simulated users will direct their gaze during
             eye-pose estimation. Defaults to [5, 4].
+
+            device (torch.device, optional): device on which to perform the
+            computations. If None, use CPU. Defaults to None.
 
         Returns:
             list of list of torch.Tensor: (N, 2) list of torch tensors, where
@@ -703,6 +709,7 @@ class SceneSampler:
         d_shape_d_data_indices = []
         d_pose_d_data_indices = []
         counter = 0
+        device = device if device is not None else torch.device(CPU_DEVICE_NAME)
         for scene_idx, et_scene in enumerate(self.generate_samples()):
             derivative_data = DataWrapper(et_scene)
 
@@ -769,12 +776,16 @@ class SceneSampler:
                     # d_pupil_center_d_pose_d_(angles, c, dist) =
                     #   (d_n_d_angles * dist, eye(3), n)
 
+                    # TODO: n and derivative_data.eye_pose_parameters.angles_deg should be on GPU if device is GPU.
+                    # However, because they are both derived from the scene, which is on CPU, we likely need to move the entire scene to GPU
+                    # to make sure we don't break the computation graph
                     eye = derivative_data.eye
                     n = eye.get_gaze_direction_inParent()
                     d_n_d_angles = \
                         core.compute_auto_jacobian_from_tensors(
                             n, derivative_data.eye_pose_parameters.angles_deg
                         )
+
 
                     dist = eye.distance_from_rotation_center_to_pupil_plane
                     d_pupil_d_pose_and_dist_ = \

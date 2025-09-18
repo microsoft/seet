@@ -50,24 +50,5 @@
 
     "path": null,
     "coordinates": "default_device/default_right_leds.json"
-  },
-
-  "no_occluder": {
-    "_comments": [
-      "The value for key 'requires_grad' indicates whether extrinsic parameters are supposed to be differentiable.",
-      "Path is the directory where the occluder file is found. If null, the SEET default is used."
-    ],
-
-    "requires grad": false,
-
-    "extrinsics": [
-      [1.0, 0.0, 0.0, 0.0],
-      [0.0, 1.0, 0.0, 0.0],
-      [0.0, 0.0, 1.0, 0.0],
-      [0.0, 0.0, 0.0, 1.0]
-    ],
-
-    "path": null,
-    "coordinates": "default_device/default_right_occluder.json"
   }
 }

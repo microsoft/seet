@@ -194,10 +194,12 @@ class SensitivityAnalysisAPP(QMainWindow):
         """Handle generate derivatives button click."""
         try:
             # Get inputs from GUI
+            print("Get inputs from GUI", flush=True)
             num_samples_text = self.num_samples_input.text().strip()
             sampling_file = self.sampling_filename_input.text().strip()
             
             # Validate inputs
+            print("Validate inputs", flush=True)
             if not sampling_file:
                 QMessageBox.warning(
                     self, "Input Error",
@@ -213,6 +215,7 @@ class SensitivityAnalysisAPP(QMainWindow):
                 return
                 
             # Parse number of samples
+            print("Parse number of samples", flush=True)
             num_samples = None
             if num_samples_text:
                 try:
@@ -225,33 +228,48 @@ class SensitivityAnalysisAPP(QMainWindow):
                         "Please enter a valid positive number for samples."
                     )
                     return
+            else:
+                QMessageBox.warning(
+                        self, "Input Error",
+                        "Please enter a valid positive number for samples."
+                    )
+                return
             
             # Save settings
+            print("Save settings", flush=True)
             self.settings.setValue("-num samples-", num_samples_text)
             self.settings.setValue("-sampling file name-", sampling_file)
             
             # Create progress dialog
+            print("Create progress dialog", flush=True)
             progress = QProgressDialog(
                 "Generating derivatives...", "Cancel", 0, 100, self
             )
             progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.setValue(0)
             progress.show()
             
             # Generate data using the generator
+            print("Generate data using the generator", flush=True)
             generator = self.analysis_utils.generate_data(
                 sampling_file, num_samples
             )
+            # Approximate 40 measurements per sample (2 eyes, 20 "gaze" directions each)
+            measure_count = num_samples * 40 
             sample_count = 0
+
+            print(f"Num count: {num_samples}", flush=True)
             
             try:
                 while True:
                     try:
                         sample_count = next(generator)
+                        print(f"Sample count: {sample_count}", flush=True)
                         # Update progress (rough estimate since we don't know
                         # total in advance)
                         if num_samples:
                             progress_percent = min(
-                                int((sample_count / num_samples) * 100), 99
+                                int((sample_count / measure_count) * 100), 99
                             )
                         else:
                             # Just show activity
@@ -260,6 +278,7 @@ class SensitivityAnalysisAPP(QMainWindow):
                         
                         # Check if user cancelled
                         if progress.wasCanceled():
+                            progress.close()
                             QMessageBox.information(
                                 self, "Cancelled",
                                 "Data generation was cancelled."

@@ -49,7 +49,7 @@ def stack_tensors(tuple_of_rows):
     )
 
 
-def compute_numeric_jacobian_from_tensors(x, fun, delta=TEPS * 100):
+def compute_numeric_jacobian_from_tensors(x, fun, delta=TEPS * 100, device=None):
     """compute_numeric_jacobian_from_tensors.
 
     This function numerically compute the Jacobian of fun with respect to x.
@@ -61,14 +61,28 @@ def compute_numeric_jacobian_from_tensors(x, fun, delta=TEPS * 100):
         fun (callable): function taking torch Tensor x as input and returning a
         torch Tensor y.
 
+        device (torch.device or str, optional): If specified, the computation is
+        performed on this device. If None, the device of the input tensor x is used.
+
     Returns:
         torch.Tensor: torch.Tensor with shape of (y, x) corresponding to the
         Jacobian of fun with respect to x (y is the output of fun(x)).
     """
+    if device is not None:
+        target_device = torch.device(device) if isinstance(device, str) else device
+        x = x.to(target_device)
+    else:
+        target_device = x.device
+    
+    if isinstance(delta, torch.Tensor):
+        delta = delta.to(target_device)
+    else:
+        delta = torch.tensor(delta, device=target_device, dtype=x.dtype)
+
     y = fun(x)
     y_shape = list(y.shape)
     x_shape = list(x.shape)
-    dy_dx = torch.empty(y_shape + x_shape, dtype=y.dtype, requires_grad=False)
+    dy_dx = torch.empty(y_shape + x_shape, dtype=y.dtype, device=target_device, requires_grad=False)
 
     if dy_dx.ndim == 0:
         return (fun(x + delta) - fun(x)) / delta
@@ -88,7 +102,7 @@ def alt_compute_auto_jacobian_from_tensors(y, x, create_graph=False):
     """alt_compute_auto_jacobian_from_tensors.
 
     Generate the derivative of the tensor y with respect to the tensor x using
-    PyTorch Autograd.
+    PyTorch Autograd. Note that y and x must be on the same device.
 
     Parameters
     ----------
@@ -107,13 +121,16 @@ def alt_compute_auto_jacobian_from_tensors(y, x, create_graph=False):
         X2, ..., XN), such that the derivative of y[i1, i2, ..., iM] with
         respect to x[j1, j2, ..., jN] is out[i1, i2, ..., iM, j1, j2, ..., jN].
     """
+    assert x.device == y.device
+    device = x.device
+
     M = y.numel()
     y_shape = list(y.shape)
     x_shape = list(x.shape)
 
     # If Y is (b1 x ... x bM) and X is (a1 x ... x aN), then
     # dY_dX is (b1 x ... x bM x a1 x ... aN)
-    basis = torch.eye(M, dtype=y.dtype).reshape([M, ] + y_shape)
+    basis = torch.eye(M, dtype=y.dtype, device=device).reshape([M, ] + y_shape)
     result = ()
     for i in range(M):
         dy_dx_i = torch.autograd.grad(
@@ -126,7 +143,7 @@ def alt_compute_auto_jacobian_from_tensors(y, x, create_graph=False):
 
         if dy_dx_i is None:
             # x is not in the computational graph of y, so dy_dx_i is zero.
-            dy_dx_i = torch.zeros_like(x)
+            dy_dx_i = torch.zeros_like(x, device=device)
 
         if dy_dx_i.ndim == 0:
             # Result is a scalar. Fix it so concatenation works.
@@ -141,7 +158,7 @@ def compute_auto_jacobian_from_tensors(y, x, create_graph=False):
     """compute_auto_jacobian_from_tensors.
 
     Generate the derivative of the tensor y with respect to the tensor x using
-    PyTorch Autograd.
+    PyTorch Autograd. Note that y and x must be on the same device.
 
     Parameters
     ----------
@@ -160,13 +177,16 @@ def compute_auto_jacobian_from_tensors(y, x, create_graph=False):
         X2, ..., XN), such that the derivative of y[i1, i2, ..., iM] with
         respect to x[j1, j2, ..., jN] is out[i1, i2, ..., iM, j1, j2, ..., jN].
     """
+    assert x.device == y.device
+    device = x.device
+    
     M = y.numel()
     y_shape = list(y.shape)
     x_shape = list(x.shape)
 
     # If Y is (b1 x ... x bM) and X is (a1 x ... x aN), then
     # dY_dX is (b1 x ... x bM x a1 x ... aN)
-    basis = torch.eye(M, dtype=y.dtype).reshape([M, ] + y_shape)
+    basis = torch.eye(M, dtype=y.dtype, device=device).reshape([M, ] + y_shape)
     dy_dx = torch.autograd.grad(
         outputs=y,
         inputs=x,
@@ -178,7 +198,7 @@ def compute_auto_jacobian_from_tensors(y, x, create_graph=False):
 
     if dy_dx is None:
         # x is not used in the computation of y. Derivative must be zero.
-        return torch.zeros(y_shape + x_shape)
+        return torch.zeros(y_shape + x_shape, dtype=y.dtype, device=device)
 
     return dy_dx[0].view(y_shape + x_shape)
 

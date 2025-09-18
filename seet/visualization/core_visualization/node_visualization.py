@@ -69,17 +69,24 @@ class NodeVisualization():
     def adjust_3D(axes_3D):
         """adjust_3D.
 
-        Fix problems with pyplot aspect ratio in 3D.
+        Fix problems with pyplot aspect ratio in 3D by using data-proportional scaling.
+        This preserves the actual physical proportions of the data while ensuring
+        proper aspect ratios based on the real data ranges.
         """
 
-        # We expect that the axes view point has been adjusted using
-        # axes_3D.view_init(vertical_axis="y"). So the last axis for viewing is
-        # y, not z. This changes the order of the limits for [x, y, z] to [z,
-        # x, y], where the positions of z and x preserve right-handedness.
-        limits = \
-            [axes_3D.get_zlim3d(), axes_3D.get_xlim3d(), axes_3D.get_ylim3d()]
-        aspects = [limits[i][1] - limits[i][0] for i in range(3)]
-        axes_3D.set_box_aspect(aspects)
+        # Get current axis limits
+        xlim = axes_3D.get_xlim3d()
+        ylim = axes_3D.get_ylim3d()
+        zlim = axes_3D.get_zlim3d()
+        
+        # Calculate actual data ranges
+        x_range = xlim[1] - xlim[0]
+        y_range = ylim[1] - ylim[0]  
+        z_range = zlim[1] - zlim[0]
+        
+        # Set box aspect based on actual data proportions
+        # This ensures the visualization reflects true physical dimensions
+        axes_3D.set_box_aspect([x_range, y_range, z_range])
 
     @staticmethod
     def adjust_2D(axes_2D, camera):

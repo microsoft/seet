@@ -11,6 +11,7 @@ import seet.core as core
 import seet.device as device
 import torch
 import unittest
+import os
 
 
 class TestSubsystemModel(unittest.TestCase):
@@ -118,12 +119,23 @@ class TestSubsystemModel(unittest.TestCase):
         Test whether occluder really occludes points.
         """
 
+        # Create a subsystem that uses the device with occluder
+        subsystem_with_occluder = device.SubsystemModel(
+            core.Node(),
+            core.SE3.create_identity(),
+            parameter_file_name=os.path.join(
+                device.DEVICE_DIR,
+                "default_device/default_with_occluder_left_subsystem_model.json"
+            ),
+            requires_grad=True
+        )
+
         # Pylance complains otherwise...
-        assert (self.subsystem.occluder is not None)
+        assert (subsystem_with_occluder.occluder is not None)
 
         # Create a ray that is not occluded.
         occluder_coordinates_inSubsystem = \
-            self.subsystem.occluder.get_coordinates_inParent()
+            subsystem_with_occluder.occluder.get_coordinates_inParent()
 
         reference_inSubsystem = occluder_coordinates_inSubsystem.mean(axis=1)
         points_inSubsystem = \
@@ -131,7 +143,7 @@ class TestSubsystemModel(unittest.TestCase):
             torch.tensor([[0.0], [0.0], [10.0]])
         points_inSubsystem = list(points_inSubsystem.T)
         visible_inSubsystem = \
-            self.subsystem.apply_occluder_inSubsystem(
+            subsystem_with_occluder.apply_occluder_inSubsystem(
                 points_inSubsystem, reference_inSubsystem
             )
 
@@ -142,7 +154,7 @@ class TestSubsystemModel(unittest.TestCase):
         reference_inSubsystem = \
             reference_inSubsystem + torch.tensor([30.0, 0.0, 0.0])
         invisible_inSubsystem = \
-            self.subsystem.apply_occluder_inSubsystem(
+            subsystem_with_occluder.apply_occluder_inSubsystem(
                 points_inSubsystem, reference_inSubsystem
             )
 

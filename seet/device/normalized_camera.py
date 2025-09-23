@@ -281,23 +281,24 @@ class NormalizedCamera(core.Node):
         transform_toCamera_fromPlane = \
             ellipse_node.parent.get_transform_toOther_fromSelf(self)
         T_toCamera_fromPlane = transform_toCamera_fromPlane.transform_matrix
+        device = T_toCamera_fromPlane.device
 
         C = ellipse_node.get_homogeneous_matrix_inPlane()
-        D = torch.linalg.pinv(C)  # Pinv propagates gradients better than inv?
+        D = torch.linalg.pinv(C).to(device)  # Pinv propagates gradients better than inv?
         D1 = D[:2, :2]
         d2 = D[:2, -1].view((2, 1))
         d3 = D[-1, -1].view((1, 1))
         Q_inv = \
             torch.vstack(
                 (
-                    torch.hstack((D1, torch.zeros((2, 1)), d2)),
-                    torch.zeros((1, 4)),
-                    torch.hstack((d2.T, torch.zeros((1, 1)), d3))
+                    torch.hstack((D1, torch.zeros((2, 1), device=device), d2)),
+                    torch.zeros((1, 4), device=device),
+                    torch.hstack((d2.T, torch.zeros((1, 1), device=device), d3))
                 )
             )
 
         C_inv = (T_toCamera_fromPlane @ Q_inv @ T_toCamera_fromPlane.T)[:3, :3]
-        C_ = torch.linalg.pinv(C_inv)
+        C_ = torch.linalg.pinv(C_inv).to(device)
 
         return \
             primitives.Ellipse.create_from_homogeneous_matrix_inPlane(
@@ -475,7 +476,7 @@ class NormalizedCamera(core.Node):
             #          diag([1, -1, 1]) @ R1.T
             #   = R1_ @ diag(eigenvalues) @ R1_T.
 
-            R1 = R1 @ torch.diag(torch.tensor([1.0, -1.0, 1.0]))
+            R1 = R1 @ torch.diag(torch.tensor([1.0, -1.0, 1.0], device=R1.device))
 
         # Obtain the second rotation.
         diff_10 = eigenvalues[1] - eigenvalues[0]  # >= 0
@@ -507,9 +508,9 @@ class NormalizedCamera(core.Node):
         # in front of the camera), the sign of delta must be adjusted according
         # to whether we take RC_pos or RC_neg.
         center_circle_inRotatedPlane_pos = \
-            torch.hstack((delta, torch.tensor(0.0), dist))
+            torch.hstack((delta, torch.tensor(0.0, device=delta.device), dist))
         center_circle_inRotatedPlane_neg = \
-            torch.hstack((-delta, torch.tensor(0.0), dist))
+            torch.hstack((-delta, torch.tensor(0.0, device=delta.device), dist))
         center_circle_inCamera_pos = RC_pos @ center_circle_inRotatedPlane_pos
         center_circle_inCamera_neg = RC_neg @ center_circle_inRotatedPlane_neg
 

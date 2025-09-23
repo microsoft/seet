@@ -66,15 +66,14 @@ class PSL3():
             Object representing a transformation to coordinate system A from
             coordinate system C.
         """
-        transform_matrix_toA_fromC = \
-            transform_toA_fromB.transform_matrix @ \
-            transform_toB_fromC.transform_matrix
+        device = transform_toA_fromB.transform_matrix.device
+        matrixA = transform_toA_fromB.transform_matrix
+        matrixB = transform_toB_fromC.transform_matrix.to(device)
+        inverseA = transform_toA_fromB.inverse_transform_matrix
+        inverseB = transform_toB_fromC.inverse_transform_matrix.to(device)
 
-        # Matrix multiplication is cheaper and more accurate than matrix
-        # inversion.
-        transform_matrix_toC_fromA = \
-            transform_toB_fromC.inverse_transform_matrix @ \
-            transform_toA_fromB.inverse_transform_matrix
+        transform_matrix_toA_fromC = matrixA @ matrixB
+        transform_matrix_toC_fromA = inverseB @ inverseA
 
         return cls(
             transform_matrix_toA_fromC,
@@ -82,14 +81,19 @@ class PSL3():
         )
 
     @classmethod
-    def create_identity(cls, requires_grad=False):
-        Identity = torch.eye(4, requires_grad=requires_grad)
+    def create_identity(cls, requires_grad=False, device=None):
+        #if device is None:
+        #    device = torch.device('cpu')
+        if device is None:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        Identity = torch.eye(4, requires_grad=requires_grad, device=device)
         if requires_grad:
             # Have to explicitly compute inverse so that derivatives are
             # correctly propagated.
             inv_Identity = torch.linalg.pinv(Identity)
         else:
-            inv_Identity = torch.eye(4)
+            inv_Identity = torch.eye(4, device=device)
 
         return cls(Identity, inv_Identity)
 
@@ -151,7 +155,7 @@ class PSL3():
         Returns:
             torch.Tensor: (4, ...)-shaped torch tensor
         """
-        return self.transform_matrix @ points_3D_h
+        return self.transform_matrix @ points_3D_h.to(self.transform_matrix.device)
 
     def inverse_homogeneous_transform(self, points_3D_h):
         """inverse_homogeneous_transform.
@@ -165,7 +169,7 @@ class PSL3():
         Returns:
             torch.Tensor: (4, ...)-shaped torch tensor
         """
-        return self.inverse_transform_matrix @ points_3D_h
+        return self.inverse_transform_matrix @ points_3D_h.to(self.inverse_transform_matrix.device)
 
     def transform(self, points_3D):
         """transform.
@@ -219,13 +223,13 @@ class SO3(PSL3):
             R_inv = R.T
 
         actual = R_inv @ R
-        expected = torch.eye(3)
+        expected = torch.eye(3, device=transform_matrix.device)
         if not torch.allclose(
             actual, expected, rtol=numeric.EPS * 100, atol=numeric.EPS * 100
         ):
             print("Rotation matrix has low accuracy.")
 
-        zero_vector = torch.zeros(3)
+        zero_vector = torch.zeros(3, device=transform_matrix.device)
         one_vector = geometry.homogenize(zero_vector)
 
         three_by_four = torch.hstack((R, zero_vector.view(3, 1)))
@@ -292,11 +296,11 @@ class SE3(PSL3):
         """
         if transform_matrix.ndim == 1 or transform_matrix.size()[1] == 1:
             # Input is translation.
-            self.rotation = SO3(torch.eye(3))
-            top = torch.hstack((torch.eye(3), transform_matrix.view(3, 1)))
+            self.rotation = SO3(torch.eye(3, device=transform_matrix.device))
+            top = torch.hstack((torch.eye(3, device=transform_matrix.device), transform_matrix.view(3, 1)))
             neg_top = \
-                torch.hstack((torch.eye(3), -transform_matrix.view(3, 1)))
-            bottom = torch.tensor((0.0, 0.0, 0.0, 1.0))
+                torch.hstack((torch.eye(3, device=transform_matrix.device), -transform_matrix.view(3, 1)))
+            bottom = torch.tensor((0.0, 0.0, 0.0, 1.0), device=transform_matrix.device)
             transform_matrix_4x4 = torch.vstack((top, bottom.view(1, 4)))
             inverse_transform_matrix_4x4 = \
                 torch.vstack((neg_top, bottom.view(1, 4)))

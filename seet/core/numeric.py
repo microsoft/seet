@@ -44,8 +44,15 @@ def rad_to_deg(val):
 
 
 def stack_tensors(tuple_of_rows):
+    # Find the target device from the first tensor in the first row
+    first_tensor = tuple_of_rows[0][0]
+    target_device = first_tensor.device if hasattr(first_tensor, 'device') else None
+
+    def _ensure_row_device(row):
+        return tuple(t.to(target_device) if hasattr(t, 'to') and target_device is not None and t.device != target_device else t for t in row)
+
     return torch.vstack(
-        tuple(torch.hstack(tuple(row)) for row in tuple_of_rows)
+        tuple(torch.hstack(_ensure_row_device(row)) for row in tuple_of_rows)
     )
 
 
@@ -128,6 +135,9 @@ def alt_compute_auto_jacobian_from_tensors(y, x, create_graph=False):
     y_shape = list(y.shape)
     x_shape = list(x.shape)
 
+    assert x.requires_grad, "x must have requires_grad=True"
+    assert y.grad_fn is not None, "y must be connected to x"
+
     # If Y is (b1 x ... x bM) and X is (a1 x ... x aN), then
     # dY_dX is (b1 x ... x bM x a1 x ... aN)
     basis = torch.eye(M, dtype=y.dtype, device=device).reshape([M, ] + y_shape)
@@ -178,6 +188,14 @@ def compute_auto_jacobian_from_tensors(y, x, create_graph=False):
         respect to x[j1, j2, ..., jN] is out[i1, i2, ..., iM, j1, j2, ..., jN].
     """
     assert x.device == y.device
+   # Move inputs to the same device (GPU if available)
+    #device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    #x = x.to(device)
+    #x.requires_grad_(True)
+    #y = y.to(device)
+    #y = y.to(device)
+    #x = x.to(device)
+
     device = x.device
     
     M = y.numel()
@@ -199,7 +217,6 @@ def compute_auto_jacobian_from_tensors(y, x, create_graph=False):
     if dy_dx is None:
         # x is not used in the computation of y. Derivative must be zero.
         return torch.zeros(y_shape + x_shape, dtype=y.dtype, device=device)
-
     return dy_dx[0].view(y_shape + x_shape)
 
 

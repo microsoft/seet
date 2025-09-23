@@ -43,7 +43,7 @@ class LEDsParameters():
     translation (i.e., zero) applied to all LEDs.
     """
 
-    def __init__(self, subsystem):
+    def __init__(self, subsystem, device=None):
         """Set LED location parameters.
 
         We create identity transformations for each LED. In addition to
@@ -63,21 +63,22 @@ class LEDsParameters():
         self.subsystem = subsystem
         self.camera = self.subsystem.cameras[0]
         self.leds = self.subsystem.led_set
+        if device is None:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
 
         # First, we breakdown the LED set into individual LEDs
-        all_coordinates_inSubsystem = \
-            torch.split(self.leds.coordinates, 1, dim=1)
+        all_coordinates_inSubsystem = torch.split(self.leds.coordinates.to(self.device), 1, dim=1)
 
         # Then, we transform each LED with its own identity transformation.
-        T_toCamera_fromLEDParent = \
-            self.leds.parent.get_transform_toOther_fromSelf(self.camera)
+        T_toCamera_fromLEDParent = self.leds.parent.get_transform_toOther_fromSelf(self.camera)
         T_toLEDParent_fromCamera = T_toCamera_fromLEDParent.create_inverse()
 
         self.all_translations = []
         self.all_coordinates_inSubsystem = []
         for led in all_coordinates_inSubsystem:
-            translation = torch.zeros(3, requires_grad=True)
-            self.all_translations = self.all_translations + [translation, ]
+            translation = torch.zeros(3, requires_grad=True, device=self.device)
+            self.all_translations.append(translation)
 
             # We want to transform the LED coordinates with respect to the
             # camera coordinate system, but we need to achieve that through the
@@ -95,30 +96,28 @@ class LEDsParameters():
             # This is the identity transformation, but we seek to compute
             # derivative with respect to changes around the LEDs current
             # position.
-            T_toParent_fromParent = \
+            T_toParent_fromParent = core.SE3.compose_transforms(
                 core.SE3.compose_transforms(
-                    core.SE3.compose_transforms(
-                        T_toLEDParent_fromCamera,
-                        translation_toCamera_fromCamera
-                    ),
-                    T_toCamera_fromLEDParent
-                )
+                    T_toLEDParent_fromCamera,
+                    translation_toCamera_fromCamera
+                ),
+                T_toCamera_fromLEDParent
+            )
 
             new_led = T_toParent_fromParent.transform(led).flatten()
-            self.all_coordinates_inSubsystem = \
-                self.all_coordinates_inSubsystem + [new_led, ]
+            self.all_coordinates_inSubsystem.append(new_led)
 
         # Reconstruct the LED set a single 3 x N tensor, as assumed elsewhere.
         # This are exactly the same values as before, but now they have a
         # dependence on axis-angles and translation tensors stored in
         # self.all_axis_angles and self.all_translations.
-        self.leds.coordinates = \
-            torch.stack(self.all_coordinates_inSubsystem, dim=1)
+        self.leds.coordinates = torch.stack(self.all_coordinates_inSubsystem, dim=1).to(self.device)
 
-        # Finally, we also create axis-angle and translation tensors that apply
-        # jointly to all LEDs.
-        self.joint_axis_angle = torch.zeros(3, requires_grad=True)
-        self.joint_translation = torch.zeros(3, requires_grad=True)
+        # Finally, we also create axis-angle and translation tensors that apply jointly to all LEDs.
+        self.joint_axis_angle = torch.zeros(3, requires_grad=True, device=self.device)
+        self.joint_translation = torch.zeros(3, requires_grad=True, device=self.device)
+
+
 
         # We want to transform the LED coordinates with respect to the
         # camera coordinate system, but we need to achieve that through the
@@ -171,10 +170,14 @@ class CameraExtrinsicParameters():
 
         self.camera = camera
 
+        if device is None:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
+
         # We wish to compute derivatives of our measurements with respect to
         # the rotation and translation below.
-        self.axis_angle = torch.zeros(3, requires_grad=True)
-        self.translation = torch.zeros(3, requires_grad=True)
+        self.axis_angle = torch.zeros(3, requires_grad=True, device=self.device)
+        self.translation = torch.zeros(3, requires_grad=True, device=self.device)
 
         # We have to effect this transformation using the method
         # update_transform_toParent_fromSelf, which takes as input an update
@@ -245,14 +248,18 @@ class EyePoseParameters():
         self.eye = eye
         self.cornea = self.eye.cornea
 
+        if device is None:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
+
         self.set_differentiable_parameters()
 
     def set_differentiable_parameters(self):
         """Set rotation angles and translation w.r.t. which to differentiate.
         """
 
-        self.angles_deg = torch.zeros(2, requires_grad=True)
-        self.translation = torch.zeros(3, requires_grad=True)
+        self.angles_deg = torch.zeros(2, requires_grad=True, device=self.device)
+        self.translation = torch.zeros(3, requires_grad=True, device=self.device)
 
         self.eye.rotate_from_gaze_angles_inParent(self.angles_deg)
         self.eye.translate_inParent(self.translation)
@@ -302,6 +309,10 @@ class EyeShapeParameters():
 
         self.eye = eye
         self.cornea = self.eye.cornea
+
+        if device is None:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
 
         self.distance_from_rotation_center_to_cornea_center = \
             self.eye.distance_from_rotation_center_to_cornea_center

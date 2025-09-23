@@ -99,15 +99,15 @@ class Ellipsoid(core.Node):
         """
 
         Q_inEllipsoid = self.get_ellipsoid_matrix_inEllipsoid()
-        transform_toOther_fromEllipsoid = \
-            self.get_transform_toOther_fromSelf(other)
-        transform_matrix_toEllipsoid_fromOther = \
-            transform_toOther_fromEllipsoid.inverse_transform_matrix
+        transform_toOther_fromEllipsoid = self.get_transform_toOther_fromSelf(other)
+        transform_matrix_toEllipsoid_fromOther = transform_toOther_fromEllipsoid.inverse_transform_matrix
 
-        return \
-            transform_matrix_toEllipsoid_fromOther.T @ \
-            Q_inEllipsoid @ \
-            transform_matrix_toEllipsoid_fromOther
+        # Ensure all tensors are on the same device
+        target_device = transform_matrix_toEllipsoid_fromOther.device
+        if Q_inEllipsoid.device != target_device:
+            Q_inEllipsoid = Q_inEllipsoid.to(target_device)
+
+        return transform_matrix_toEllipsoid_fromOther.T @ Q_inEllipsoid @ transform_matrix_toEllipsoid_fromOther
 
     def intersect_from_origin_and_direction_inEllipsoid(
         self, origin_inEllipsoid, direction_inEllipsoid

@@ -63,10 +63,11 @@ class TestGroups(unittest.TestCase):
         id = core.PSL3.compose_transforms(self.element, self.inverse_element)
         id_ = core.PSL3.create_identity()
 
+        device = id.transform_matrix.device
         self.assertTrue(
             torch.allclose(
                 id.transform_matrix,
-                id_.transform_matrix,
+                id_.transform_matrix.to(device),
                 rtol=core.EPS * 100,  # We need to be forgiving
                 atol=core.EPS * 100  # because errors accumulate.
             )

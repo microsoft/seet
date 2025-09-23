@@ -5,6 +5,7 @@
 __author__ = "Paulo R. S. Mendonca (padossa@microsof.com)"
 
 
+import torch
 from sensitivity_analysis.derivative_calculators import data_wrapper
 
 
@@ -19,15 +20,25 @@ class BasicDerivatives():
             derivative_data (data_wrapper.DataWrapper): data required for the
             computation of derivatives.
         """
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device=device
 
         self.derivative_data = derivative_data
 
         # Easy access to some data.
+        print("led_locations type:", type(self.derivative_data.led_locations))
+
         self.camera_extrinsics = self.derivative_data.camera_extrinsics
         self.camera_intrinsics = self.derivative_data.camera_intrinsics
-        self.led_locations = self.derivative_data.led_locations
-        self.eye_pose_parameters = self.derivative_data.eye_pose_parameters
-        self.eye_shape_parameters = self.derivative_data.eye_shape_parameters
+        self.led_locations = self.derivative_data.led_locations.to(self.device)
+        self.eye_pose_parameters = self.derivative_data.eye_pose_parameters.to(self.device)
+        self.eye_shape_parameters = self.derivative_data.eye_shape_parameters.to(self.device)
+
+        #self.camera_extrinsics = self.derivative_data.camera_extrinsics
+        #self.camera_intrinsics = self.derivative_data.camera_intrinsics
+        #self.led_locations = self.derivative_data.led_locations
+        #self.eye_pose_parameters = self.derivative_data.eye_pose_parameters
+        #self.eye_shape_parameters = self.derivative_data.eye_shape_parameters
 
         # These parameters are made available only when features are computed.
         self.pupil_angles_rad = None
@@ -71,10 +82,14 @@ class BasicDerivatives():
             nine intrinsic camera parameters.
         """
 
+
         d_x_d_parameters = []
         for single_x in x:
             if single_x is None:
                 continue
+
+# Ensure input tensor is on the correct device
+            single_x = single_x.to(self.device)
 
             d_single_x_d_parameters = \
                 self._compute_d_x_d_parameters(single_x, x_name)

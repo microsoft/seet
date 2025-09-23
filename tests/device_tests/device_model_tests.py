@@ -93,7 +93,7 @@ class TestDeviceModel(unittest.TestCase):
             torch.allclose(
                 led_coordinates_inOther,
                 torch.diag(
-                    torch.tensor([-1.0, 1.0, 1.0])
+                    torch.tensor([-1.0, 1.0, 1.0], device=led_coordinates_inOther.device)
                 ) @ mirror_led_coordinates_inOther
             )
         )

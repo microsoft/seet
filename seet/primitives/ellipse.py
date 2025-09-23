@@ -109,22 +109,28 @@ class Ellipse(core.Node):
         #     [rotation_to2DPlane_fromEllipse, 0, center_in2DPlane]
         # T = [                             0, 1,                0] [ 0, 0, 1]
         angle_rad = core.deg_to_rad(angle_deg)
+        # Ensure all tensors are on the same device as x_radius
+        device = x_radius.device if hasattr(x_radius, 'device') else None
+        angle_rad = core.deg_to_rad(angle_deg)
         c = torch.cos(angle_rad)
         s = torch.sin(angle_rad)
-        rotation_to2DPlane_fromEllipse = \
-            core.stack_tensors(
-                ((c, -s),
-                 (s, c))
+        if device is not None:
+            c = c.to(device)
+            s = s.to(device)
+            center_in2DPlane = center_in2DPlane.to(device)
+        # The rest of the function continues as before
 
-            )
-        top_2x4 = \
-            torch.hstack(
-                (
-                    rotation_to2DPlane_fromEllipse,
-                    torch.zeros(2, 1),
-                    center_in2DPlane.view(2, 1)
-                )
-            )
+        # Compute rotation matrix for the ellipse orientation in the plane
+        rotation_to2DPlane_fromEllipse = torch.stack([
+            torch.stack([torch.cos(angle_rad), -torch.sin(angle_rad)]),
+            torch.stack([torch.sin(angle_rad), torch.cos(angle_rad)])
+        ])
+
+        top_2x4 = torch.hstack((
+            rotation_to2DPlane_fromEllipse,
+            torch.zeros(2, 1, device=device) if device is not None else torch.zeros(2, 1),
+            center_in2DPlane.view(2, 1)
+        ))
         bottom_2x4 = \
             core.stack_tensors(
                 (
@@ -188,7 +194,7 @@ class Ellipse(core.Node):
 
         if torch.linalg.det(rotation_toEllipse_from2DPlane) < 0:
             rotation_toEllipse_from2DPlane = \
-                torch.diag(torch.tensor([-1.0, 1.0])) @ \
+                torch.diag(torch.tensor([-1.0, 1.0], device=rotation_toEllipse_from2DPlane.device)) @ \
                 rotation_toEllipse_from2DPlane
         rotation_to2DPlane_fromEllipse = rotation_toEllipse_from2DPlane.T
 
@@ -202,15 +208,15 @@ class Ellipse(core.Node):
             torch.hstack(
                 (
                     rotation_to2DPlane_fromEllipse,
-                    torch.zeros(2, 1),
+                    torch.zeros(2, 1, device=center_in2DPlane.device),
                     center_in2DPlane.view(2, 1)
                 )
             )
         bottom_2x4 = \
             core.stack_tensors(
                 (
-                    torch.tensor([0.0, 0.0, 1.0, 0.0]),
-                    torch.tensor([0.0, 0.0, 0.0, 1.0])
+                    torch.tensor([0.0, 0.0, 1.0, 0.0], device=center_in2DPlane.device),
+                    torch.tensor([0.0, 0.0, 0.0, 1.0], device=center_in2DPlane.device)
                 )
             )
         transform_matrix_to3DPlane_fromEllipse = \
@@ -244,7 +250,7 @@ class Ellipse(core.Node):
                     (
                         self.x_radius * self.x_radius,
                         self.y_radius * self.y_radius,
-                        torch.tensor(-1.0)
+                        torch.tensor(-1.0, device=self.x_radius.device)
                     )
                 )
             )
@@ -389,15 +395,21 @@ class Ellipse(core.Node):
         #
         # r^2 = 1 / (cos^2(angle)/a^2 + sin^2(angle)/b^2).
 
+        # Ensure all tensors are on the same device as self.x_radius
+        device = self.x_radius.device if hasattr(self.x_radius, 'device') else None
         c = torch.cos(angles_rad)
-        c_over_a = c / self.x_radius
         s = torch.sin(angles_rad)
+        if device is not None:
+            c = c.to(device)
+            s = s.to(device)
+            angles_rad = angles_rad.to(device)
+        c_over_a = c / self.x_radius
         s_over_b = s / self.y_radius
 
         r2 = 1 / (c_over_a * c_over_a + s_over_b * s_over_b)
         r = torch.sqrt(r2)
 
-        return torch.stack((r * c, r * s, torch.zeros_like(angles_rad)))
+        return torch.stack((r * c, r * s, torch.zeros_like(angles_rad, device=device)))
 
     def get_normal_at_angles_inEllipse(self, angles_rad):
         """get_normal_at_angles_inEllipse.

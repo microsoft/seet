@@ -199,22 +199,22 @@ class Node():
         for child in self.children:
             child.in_place_mirror()
 
-        mirror_inYZPlane = torch.diag(torch.tensor([-1.0, 1.0, 1.0, 1.0]))
 
-        T_toParent_fromSelf = \
-            self.get_transform_toParent_fromSelf().transform_matrix
+        # Ensure mirror_inYZPlane is on the same device as T_toParent_fromSelf
+        T_toParent_fromSelf = self.get_transform_toParent_fromSelf().transform_matrix
+        device = T_toParent_fromSelf.device
+        mirror_inYZPlane = torch.diag(torch.tensor([-1.0, 1.0, 1.0, 1.0], device=device))
 
-        new_T_toParent_fromSelf = \
-            mirror_inYZPlane @ \
-            T_toParent_fromSelf @ \
-            mirror_inYZPlane  # This is the tricky bit, to keep handedness.
+        new_T_toParent_fromSelf = mirror_inYZPlane @ T_toParent_fromSelf @ mirror_inYZPlane  # This is the tricky bit, to keep handedness.
 
         # Create transformation update.
         tmp = self.transform_toParent_fromSelf
         T_toSelf_fromParent = tmp.inverse_transform_matrix
+        # Ensure T_toSelf_fromParent is on the same device as new_T_toParent_fromSelf
+        if T_toSelf_fromParent.device != new_T_toParent_fromSelf.device:
+            T_toSelf_fromParent = T_toSelf_fromParent.to(new_T_toParent_fromSelf.device)
 
-        delta_T_toParent_fromParent = \
-            new_T_toParent_fromSelf @ T_toSelf_fromParent
+        delta_T_toParent_fromParent = new_T_toParent_fromSelf @ T_toSelf_fromParent
 
         self.update_transform_toParent_fromSelf(
             groups.SE3(delta_T_toParent_fromParent)

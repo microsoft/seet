@@ -5,6 +5,8 @@
 __author__ = "Paulo R. S. Mendonca (padossa@microsoft.com)"
 
 
+import cProfile
+import pstats
 import matplotlib.pyplot as plt
 import sys
 import os
@@ -287,6 +289,8 @@ class SensitivityAnalysisAPP(QMainWindow):
             
             # Generate data using the generator
             print("Generate data using the generator", flush=True)
+            profile = cProfile.Profile()
+            profile.enable()
             generator = self.analysis_utils.generate_data(
                 sampling_file, num_samples
             )
@@ -339,6 +343,11 @@ class SensitivityAnalysisAPP(QMainWindow):
             
             progress.close()
             
+            profile.disable()
+            profile.dump_stats("gen_data_my.prof")
+            # Analyzing the results using pstats
+            p = pstats.Stats('gen_data_my.prof') # Or 'block_profile.prof'
+            p.strip_dirs().sort_stats("cumulative").print_stats(50)
             # Prompt to save derivatives
             reply = QMessageBox.question(
                 self, "Save Derivatives",

@@ -38,8 +38,8 @@ def rotation_around_x(angle_deg):
 
 def rotation_around_y(angle_degrees):
     theta_radians = numeric.deg_to_rad(angle_degrees)
-    cos_theta = torch.cos(theta_radians)
-    sin_theta = torch.sin(theta_radians)
+    cos_theta = torch.cos(theta_radians).to(angle_degrees.device)
+    sin_theta = torch.sin(theta_radians).to(angle_degrees.device)
     return numeric.stack_tensors((
         (cos_theta, numeric.T0, sin_theta),
         (numeric.T0, numeric.T1, numeric.T0),
@@ -136,7 +136,7 @@ def homogenize(points):
 
     # Special case of a single point when only one dimension.
     ones_size = (1, ) if len(points.size()) == 1 else (1, points.size()[1])
-    ones_row = torch.ones(ones_size)
+    ones_row = torch.ones(ones_size, device=points.device)
     return torch.cat((points, ones_row), dim=0)
 
 
@@ -224,7 +224,7 @@ def is_valid_rotation(R, dim=3, tol=numeric.EPS):
 
     if torch.allclose(torch.linalg.det(R), numeric.T1, rtol=tol, atol=tol):
         identity = R.T @ R
-        if torch.allclose(identity, torch.eye(dim), rtol=tol, atol=tol):
+        if torch.allclose(identity, torch.eye(dim, device=R.device), rtol=tol, atol=tol):
             return True
 
     return False
@@ -278,9 +278,10 @@ def hat_so3(x):
         3 x 3 torch matrix X such that X * y is equal to the cross product of
         the vector x and another 3-dimensional vector y.
     """
-    top = torch.hstack([numeric.T0, -x[2], x[1]])
-    mid = torch.hstack([x[2], numeric.T0, -x[0]])
-    bot = torch.hstack([-x[1], x[0], numeric.T0])
+    device = x.device
+    top = torch.hstack([numeric.T0.to(device), -x[2], x[1]])
+    mid = torch.hstack([x[2], numeric.T0.to(device), -x[0]])
+    bot = torch.hstack([-x[1], x[0], numeric.T0.to(device)])
 
     return numeric.stack_tensors((top, mid, bot))
 
@@ -312,7 +313,7 @@ def rotation_matrix(x):
         Rotation matrix.
     """
     angle = torch.linalg.norm(x)
-    Id3 = torch.eye(3)
+    Id3 = torch.eye(3, device=x.device)
     if angle == 0:
         # At first sight, this may look strange. Since x = 0, why not just
         # return R = id? The answer is that if we did so, R would not have any
@@ -342,7 +343,7 @@ def rotation_axis(R):
     if theta == 0:
         # R is identity, but let's return a differentiable expression. This is
         # the first order approximation of the log matrix.
-        return vee_so3(R - torch.eye(3))
+        return vee_so3(R - torch.eye(3, device=R.device))
 
     omega = \
         torch.stack(
@@ -369,7 +370,7 @@ def rotation_matrix_from_u_to_v(u, v):
         # The vectors are parallel. We return a first-order approximation of
         # the result (which will be accurate due to the "< TEPS" condition)
         # which correctly propagates derivatives.
-        return torch.eye(3) + hat_so3(cross_prod)
+        return torch.eye(3, device=u.device) + hat_so3(cross_prod)
 
     # Rescale the vector so its norm is the angle between u and v. Use cosine
     # to understand angles larger than 90 degrees.
